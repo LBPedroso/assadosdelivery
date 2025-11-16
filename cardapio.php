@@ -115,6 +115,9 @@ if ($categoria_id) {
                                 <div class="produto-footer">
                                     <span class="produto-preco">
                                         R$ <?php echo number_format($produto['preco'], 2, ',', '.'); ?>
+                                        <?php if (!empty($produto['unidade'])): ?>
+                                            <span style="font-size: 0.85em; color: #666;"> / <?php echo htmlspecialchars($produto['unidade']); ?></span>
+                                        <?php endif; ?>
                                     </span>
                                     
                                     <?php if ($produto['estoque'] > 0): ?>
