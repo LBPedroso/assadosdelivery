@@ -15,27 +15,35 @@ Este projeto consiste em um sistema web completo para gerenciamento de delivery 
 ## Funcionalidades
 
 ### Área Pública (Cliente)
-- Catálogo de produtos organizado por categorias
-- Sistema de carrinho de compras
-- Cadastro e autenticação de clientes
-- Realização de pedidos
-- Histórico de compras
-- Interface responsiva
+- ✅ Catálogo de produtos organizado por categorias
+- ✅ Sistema de carrinho de compras
+- ✅ Cadastro e autenticação de clientes com endereço completo
+- ✅ Realização de pedidos
+- ✅ Página "Minha Conta" com atualização de dados
+- ✅ Histórico de pedidos do cliente
+- ✅ Interface responsiva
+- ✅ Produtos com unidades de medida (kg, un, pct, bandeja, porção)
+- ✅ Busca e filtros por categoria
 
 ### Painel Administrativo
-- Autenticação de administradores
-- Dashboard com métricas e indicadores
-- CRUD completo de Produtos
-- CRUD completo de Categorias
-- Gerenciamento de Clientes
-- Controle de Pedidos
-- Relatórios gerenciais
+- ✅ Autenticação de administradores com bcrypt
+- ✅ Dashboard com métricas e indicadores
+- ✅ **CRUD completo de Produtos** com:
+  - Upload de imagens com preview
+  - Unidade de medida
+  - Filtros avançados (nome, categoria, status, unidade, destaque)
+  - Ordenação em 7 colunas (ID, Nome, Categoria, Preço, Unidade, Estoque, Status)
+  - Visualização de imagens em miniatura
+- ✅ CRUD completo de Categorias
+- ✅ Gerenciamento de Clientes com visualização de endereço completo
+- ✅ Controle de Pedidos com status
+- ✅ Relatórios gerenciais
 
 ### Recursos de Banco de Dados
-- **TRIGGER**: Auditoria automática de alterações de preço
-- **STORED PROCEDURE**: Inserção em lote de produtos
-- **FUNCTION**: Validação de disponibilidade de estoque
-- **ÍNDICES**: Otimização de consultas em tabelas principais
+- ✅ **TRIGGER**: Auditoria automática de alterações de preço
+- ✅ **STORED PROCEDURE**: Inserção em lote de produtos
+- ✅ **FUNCTION**: Validação de disponibilidade de estoque
+- ✅ **ÍNDICES**: Otimização de consultas (composto, fulltext, foreign keys)
 
 ---
 
@@ -78,14 +86,12 @@ assados-delivery/
 ### Tabelas Criadas
 
 1. **categorias** - Categorias dos produtos
-2. **produtos** - Cardápio completo
-3. **clientes** - Cadastro de clientes
-4. **usuarios_admin** - Administradores do sistema
+2. **produtos** - Cardápio completo com unidade de medida e imagens
+3. **clientes** - Cadastro de clientes com endereço completo (rua, número, complemento, bairro, cidade, estado, CEP)
+4. **usuarios** - Administradores do sistema com senha bcrypt
 5. **pedidos** - Pedidos realizados
 6. **pedidos_itens** - Itens de cada pedido
 7. **auditoria_precos** - Log de alterações de preço (TRIGGER)
-
-### Recursos Avançados
 
 ### Recursos Avançados Implementados
 
