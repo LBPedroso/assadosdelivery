@@ -11,7 +11,7 @@ if (session_status() === PHP_SESSION_NONE) {
                 📞 Contato: (44) 99968-0220 | 📧 contato@assadosdelivery.com
             </div>
             <div>
-                ⏰ Aberto apenas aos Sábados e Domingos (10h às 15h), agendamento a semana toda
+                🚚 Entregas: Sábados e Domingos | ⏰ Pedidos até Sábado
             </div>
         </div>
     </div>

@@ -224,7 +224,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <div class="content">
                         <h3>Horário de Atendimento</h3>
                         <p>Segunda a Sexta: 9h às 18h</p>
-                        <p>Sábado e Domingo: 8h às 14h</p>
+                        <p>Sábado e Domingo: Apenas entregas</p>
                     </div>
                 </div>
                 
@@ -232,8 +232,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <div class="icon">🚚</div>
                     <div class="content">
                         <h3>Entregas</h3>
-                        <p>Sábados e Domingos</p>
-                        <p>Pedidos até quinta-feira</p>
+                        <p><strong>Sábados e Domingos</strong></p>
+                        <p style="color: #E63946; font-weight: 600;">⏰ Pedidos até Sábado</p>
+                        <p style="font-size: 12px; color: #999; margin-top: 5px;">Faça seu pedido durante a semana!</p>
                     </div>
                 </div>
             </div>
