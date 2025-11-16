@@ -31,7 +31,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acao'])) {
 }
 
 // Buscar todos os pedidos com informações do cliente
-$db = Database::getInstance();
+$db = Database::getInstance()->getConnection();
 $sql = "SELECT p.*, c.nome as cliente_nome, c.email as cliente_email, c.telefone as cliente_telefone,
         (SELECT COUNT(*) FROM pedidos_itens WHERE pedido_id = p.id) as total_itens
         FROM pedidos p

@@ -121,22 +121,22 @@ class AuthController {
     /**
      * Verificar se está logado como cliente
      */
-    public function isCliente() {
+    public static function isCliente() {
         return isset($_SESSION['cliente_id']) && $_SESSION['tipo_usuario'] === 'cliente';
     }
     
     /**
      * Verificar se está logado como admin
      */
-    public function isAdmin() {
+    public static function isAdmin() {
         return isset($_SESSION['admin_id']) && $_SESSION['tipo_usuario'] === 'admin';
     }
     
     /**
      * Requerer login de cliente
      */
-    public function requireCliente() {
-        if (!$this->isCliente()) {
+    public static function requireCliente() {
+        if (!self::isCliente()) {
             header('Location: ' . SITE_URL . '/login.php');
             exit;
         }
@@ -145,8 +145,8 @@ class AuthController {
     /**
      * Requerer login de admin
      */
-    public function requireAdmin() {
-        if (!$this->isAdmin()) {
+    public static function requireAdmin() {
+        if (!self::isAdmin()) {
             header('Location: ' . SITE_URL . '/admin/login.php');
             exit;
         }

@@ -103,13 +103,13 @@ class PedidoController {
         $pedidosPendentes = $stmt->fetch()['total'];
         
         // Vendas do mês
-        $stmt = $db->query("SELECT SUM(valor_total) as total FROM pedidos 
+        $stmt = $db->query("SELECT SUM(total) as total FROM pedidos 
                            WHERE MONTH(criado_em) = MONTH(CURRENT_DATE()) 
                            AND YEAR(criado_em) = YEAR(CURRENT_DATE())");
         $vendasMes = $stmt->fetch()['total'] ?? 0;
         
         // Vendas de hoje
-        $stmt = $db->query("SELECT SUM(valor_total) as total FROM pedidos 
+        $stmt = $db->query("SELECT SUM(total) as total FROM pedidos 
                            WHERE DATE(criado_em) = CURDATE()");
         $vendasHoje = $stmt->fetch()['total'] ?? 0;
         

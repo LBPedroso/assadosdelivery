@@ -10,7 +10,7 @@ AuthController::requireAdmin();
 $clienteModel = new Cliente();
 
 // Buscar estatísticas dos clientes
-$db = Database::getInstance();
+$db = Database::getInstance()->getConnection();
 
 // Total de clientes
 $sqlTotal = "SELECT COUNT(*) as total FROM clientes";

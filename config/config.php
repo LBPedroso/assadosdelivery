@@ -16,7 +16,9 @@ define('SITE_CIDADE', 'Campo Mourão');
 define('SITE_ESTADO', 'PR');
 
 // Configurações de Sessão
-session_start();
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 
 // Timezone
 date_default_timezone_set('America/Sao_Paulo');
