@@ -11,7 +11,7 @@ $categorias = $categoriaModel->findAtivas();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo SITE_NAME; ?> - <?php echo SITE_SLOGAN; ?></title>
-    <link rel="stylesheet" href="public/assets/css/style.css">
+    <link rel="stylesheet" href="public/assets/css/style.css?v=20251116134148">
 </head>
 <body>
     <!-- HEADER -->
@@ -22,7 +22,7 @@ $categorias = $categoriaModel->findAtivas();
                     📞 Contato: (44) 99968-0220 | 📧 contato@assadosdelivery.com
                 </div>
                 <div>
-                    ⏰ Aberto apenas aos Sábados e Domingos (10h às 15h)
+                    ⏰ Aberto apenas aos Sábados e Domingos (10h às 15h), agendamento a semana toda
                 </div>
             </div>
         </div>
@@ -80,17 +80,24 @@ $categorias = $categoriaModel->findAtivas();
             
             <div class="categorias-grid">
                 <?php 
-                $icones = ['🥩', '🍚', '🍱', '🍻', '🔥'];
-                $i = 0;
+                // Mapear ícones pelo NOME da categoria para garantir que está correto
+                $iconesPorNome = [
+                    'Carnes Assadas' => '🥩',
+                    'Acompanhamentos' => '🍚',
+                    'Combos' => '🍱',
+                    'Bebidas' => '🍻',
+                    'Conveniência' => '🔥'
+                ];
+                
                 foreach ($categorias as $categoria): 
+                    $icone = isset($iconesPorNome[$categoria['nome']]) ? $iconesPorNome[$categoria['nome']] : '🍽️';
                 ?>
-                <a href="cardapio.php?categoria=<?php echo $categoria['id']; ?>" class="categoria-card">
-                    <div class="categoria-icon"><?php echo $icones[$i % count($icones)]; ?></div>
+                <a href="cardapio.php?categoria=<?php echo $categoria['id']; ?>" class="categoria-card" style="order: <?php echo $categoria['id']; ?>">
+                    <div class="categoria-icon"><?php echo $icone; ?></div>
                     <h3><?php echo htmlspecialchars($categoria['nome']); ?></h3>
                     <p><?php echo htmlspecialchars($categoria['descricao']); ?></p>
                 </a>
                 <?php 
-                $i++;
                 endforeach; 
                 ?>
             </div>
@@ -154,7 +161,7 @@ $categorias = $categoriaModel->findAtivas();
                     <p><strong>Sábado e Domingo:</strong><br>
                     10:00 às 15:00</p>
                     <p><strong>Segunda a Sexta:</strong><br>
-                    Fechado</p>
+                    Somente Agendamentos</p>
                 </div>
                 
                 <div class="footer-section">

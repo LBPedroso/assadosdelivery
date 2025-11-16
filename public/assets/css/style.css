@@ -290,9 +290,33 @@ section {
    CATEGORIAS
    ============================================ */
 .categorias-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    display: flex;
+    flex-wrap: wrap;
     gap: 1.5rem;
+    justify-content: center;
+}
+
+.categoria-card {
+    flex: 0 0 calc(20% - 1.5rem);
+    min-width: 200px;
+}
+
+@media (max-width: 1024px) {
+    .categoria-card {
+        flex: 0 0 calc(33.333% - 1.5rem);
+    }
+}
+
+@media (max-width: 768px) {
+    .categoria-card {
+        flex: 0 0 calc(50% - 1.5rem);
+    }
+}
+
+@media (max-width: 480px) {
+    .categoria-card {
+        flex: 0 0 100%;
+    }
 }
 
 .categoria-card {

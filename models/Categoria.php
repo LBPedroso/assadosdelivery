@@ -13,7 +13,10 @@ class Categoria extends Model {
      * Buscar categorias ativas
      */
     public function findAtivas() {
-        return $this->findAll('ativo = ?', [1]);
+        $sql = "SELECT * FROM {$this->table} WHERE ativo = ? ORDER BY id ASC";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute([1]);
+        return $stmt->fetchAll();
     }
     
     /**
