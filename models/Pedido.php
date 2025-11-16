@@ -76,15 +76,37 @@ class Pedido extends Model {
         try {
             $this->db->beginTransaction();
             
+            // Buscar endereço do cliente
+            $stmt = $this->db->prepare("SELECT endereco_rua, endereco_numero, endereco_complemento, 
+                                         endereco_bairro, endereco_cidade, endereco_estado, endereco_cep 
+                                         FROM clientes WHERE id = ?");
+            $stmt->execute([$cliente_id]);
+            $cliente = $stmt->fetch();
+            
+            $endereco = sprintf(
+                "%s, %s %s - %s, %s/%s - CEP: %s",
+                $cliente['endereco_rua'] ?? '',
+                $cliente['endereco_numero'] ?? '',
+                $cliente['endereco_complemento'] ? '(' . $cliente['endereco_complemento'] . ')' : '',
+                $cliente['endereco_bairro'] ?? '',
+                $cliente['endereco_cidade'] ?? '',
+                $cliente['endereco_estado'] ?? '',
+                $cliente['endereco_cep'] ?? ''
+            );
+            
+            $subtotal = $total - $taxa_entrega;
+            
             // Preparar dados do pedido
             $dados_pedido = [
                 'cliente_id' => $cliente_id,
+                'subtotal' => $subtotal,
                 'total' => $total,
                 'taxa_entrega' => $taxa_entrega,
                 'status' => 'pendente',
                 'data_entrega' => $dados_entrega['data_entrega'],
                 'forma_pagamento' => $dados_entrega['forma_pagamento'] ?? 'dinheiro',
-                'observacoes' => $dados_entrega['observacoes'] ?? ''
+                'observacoes' => $dados_entrega['observacoes'] ?? '',
+                'endereco_entrega' => $endereco
             ];
             
             // Inserir pedido
