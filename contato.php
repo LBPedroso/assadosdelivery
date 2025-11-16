@@ -223,18 +223,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <div class="icon">🕐</div>
                     <div class="content">
                         <h3>Horário de Atendimento</h3>
-                        <p>Segunda a Sexta: 9h às 18h</p>
-                        <p>Sábado e Domingo: Apenas entregas</p>
+                        <p><strong>Segunda a Sexta:</strong> Agendem Seus Pedidos</p>
+                        <p><strong>Sábado e Domingo:</strong> Entregas e Retiradas no Local</p>
                     </div>
                 </div>
                 
                 <div class="info-item">
                     <div class="icon">🚚</div>
                     <div class="content">
-                        <h3>Entregas</h3>
-                        <p><strong>Sábados e Domingos</strong></p>
-                        <p style="color: #E63946; font-weight: 600;">⏰ Pedidos até Sábado</p>
-                        <p style="font-size: 12px; color: #999; margin-top: 5px;">Faça seu pedido durante a semana!</p>
+                        <h3>Como Funciona</h3>
+                        <p>📅 <strong>Durante a semana:</strong> Faça seu pedido</p>
+                        <p>🚚 <strong>Final de semana:</strong> Receba ou retire</p>
+                        <p style="font-size: 13px; color: #666; margin-top: 8px;">Planeje seu churrasco com antecedência!</p>
                     </div>
                 </div>
             </div>
