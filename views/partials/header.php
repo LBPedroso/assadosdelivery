@@ -11,7 +11,7 @@ if (session_status() === PHP_SESSION_NONE) {
                 📞 Contato: (44) 99968-0220 | 📧 contato@assadosdelivery.com
             </div>
             <div>
-                � Seg-Sex: Pedidos | 🚚 Sáb-Dom: Entregas e Retiradas
+                📅 Seg-Sex: Pedidos | 🚚 Sáb-Dom: Entregas e Retiradas
             </div>
         </div>
     </div>
