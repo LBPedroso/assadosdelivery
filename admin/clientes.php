@@ -329,8 +329,21 @@ $clientes = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     <div class="cliente-info">
                         <h3><?php echo htmlspecialchars($cliente['nome']); ?></h3>
                         <p>📧 <?php echo htmlspecialchars($cliente['email']); ?></p>
-                        <p>📱 <?php echo htmlspecialchars($cliente['telefone']); ?></p>
-                        <p>📍 <?php echo htmlspecialchars($cliente['endereco']); ?>, <?php echo htmlspecialchars($cliente['numero']); ?> - <?php echo htmlspecialchars($cliente['bairro']); ?></p>
+                        <p>📱 <?php echo htmlspecialchars($cliente['telefone'] ?? 'Não informado'); ?></p>
+                        <?php if (!empty($cliente['endereco_rua'])): ?>
+                        <p>📍 <?php echo htmlspecialchars($cliente['endereco_rua']); ?>, <?php echo htmlspecialchars($cliente['endereco_numero'] ?? 's/n'); ?> - <?php echo htmlspecialchars($cliente['endereco_bairro'] ?? ''); ?></p>
+                        <p style="margin-left: 1.5rem; color: #666;">
+                            <?php echo htmlspecialchars($cliente['endereco_cidade'] ?? ''); ?>/<?php echo htmlspecialchars($cliente['endereco_estado'] ?? ''); ?>
+                            <?php if (!empty($cliente['endereco_cep'])): ?>
+                                - CEP: <?php echo htmlspecialchars($cliente['endereco_cep']); ?>
+                            <?php endif; ?>
+                        </p>
+                        <?php else: ?>
+                        <p>📍 Endereço não cadastrado</p>
+                        <?php endif; ?>
+                        <?php if (!empty($cliente['cpf'])): ?>
+                        <p>🆔 CPF: <?php echo htmlspecialchars($cliente['cpf']); ?></p>
+                        <?php endif; ?>
                         <p>📅 Cliente desde <?php echo date('d/m/Y', strtotime($cliente['criado_em'])); ?></p>
                         <?php if ($cliente['ultimo_pedido']): ?>
                         <p>🕒 Último pedido: <?php echo date('d/m/Y', strtotime($cliente['ultimo_pedido'])); ?></p>
