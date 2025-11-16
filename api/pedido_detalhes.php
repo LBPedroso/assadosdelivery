@@ -10,13 +10,16 @@ if (!$id) {
 }
 
 try {
-    $db = Database::getInstance();
+    $db = Database::getInstance()->getConnection();
     
     // Buscar dados do pedido
-    $sqlPedido = "SELECT * FROM pedidos WHERE id = :id";
+    $sqlPedido = "SELECT p.*, c.nome as cliente_nome, c.telefone as cliente_telefone, 
+                  c.email as cliente_email
+                  FROM pedidos p
+                  LEFT JOIN clientes c ON p.cliente_id = c.id
+                  WHERE p.id = ?";
     $stmtPedido = $db->prepare($sqlPedido);
-    $stmtPedido->bindParam(':id', $id);
-    $stmtPedido->execute();
+    $stmtPedido->execute([$id]);
     $pedido = $stmtPedido->fetch(PDO::FETCH_ASSOC);
     
     if (!$pedido) {
@@ -25,13 +28,9 @@ try {
     }
     
     // Buscar itens do pedido
-    $sqlItens = "SELECT pi.*, p.nome as produto_nome 
-                 FROM pedidos_itens pi
-                 JOIN produtos p ON pi.produto_id = p.id
-                 WHERE pi.pedido_id = :pedido_id";
+    $sqlItens = "SELECT * FROM pedidos_itens WHERE pedido_id = ?";
     $stmtItens = $db->prepare($sqlItens);
-    $stmtItens->bindParam(':pedido_id', $id);
-    $stmtItens->execute();
+    $stmtItens->execute([$id]);
     $itens = $stmtItens->fetchAll(PDO::FETCH_ASSOC);
     
     echo json_encode([
