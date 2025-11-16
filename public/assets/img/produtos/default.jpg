@@ -1,0 +1,11 @@
+IMAGEM PLACEHOLDER
+
+Para adicionar imagens dos produtos:
+1. Coloque as imagens nesta pasta (public/assets/img/produtos/)
+2. Nomeie como: produto-1.jpg, produto-2.jpg, etc.
+3. Ou use o nome do código do produto: C001.jpg, A001.jpg, etc.
+
+Tamanho recomendado: 600x400 pixels
+Formato: JPG ou PNG
+
+Esta é uma imagem padrão (default.jpg) que será exibida quando não houver imagem específica.

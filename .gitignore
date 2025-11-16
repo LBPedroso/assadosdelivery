@@ -1,0 +1,36 @@
+# Arquivos do sistema
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Logs
+*.log
+error_log
+access_log
+
+# Arquivos temporários
+*.tmp
+*.temp
+*.cache
+
+# Node modules (caso use futuramente)
+node_modules/
+
+# Composer (caso use futuramente)
+vendor/
+
+# Configurações locais sensíveis
+config/local.php
+.env
+
+# Uploads de usuários (manter estrutura, não os arquivos)
+public/assets/img/produtos/*.jpg
+public/assets/img/produtos/*.png
+!public/assets/img/produtos/default.jpg
