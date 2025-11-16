@@ -19,6 +19,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $acao = $_POST['acao'] ?? '';
     
     if ($acao === 'criar') {
+        // Processar upload de imagem
+        $nomeImagem = 'default.jpg';
+        if (isset($_FILES['imagem']) && $_FILES['imagem']['error'] === UPLOAD_ERR_OK) {
+            $extensoesPermitidas = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
+            $nomeArquivo = $_FILES['imagem']['name'];
+            $extensao = strtolower(pathinfo($nomeArquivo, PATHINFO_EXTENSION));
+            
+            if (in_array($extensao, $extensoesPermitidas)) {
+                $nomeImagem = uniqid() . '_' . preg_replace('/[^a-zA-Z0-9._-]/', '', $nomeArquivo);
+                $caminhoDestino = __DIR__ . '/../public/assets/img/produtos/' . $nomeImagem;
+                
+                if (!move_uploaded_file($_FILES['imagem']['tmp_name'], $caminhoDestino)) {
+                    $nomeImagem = 'default.jpg';
+                }
+            }
+        }
+        
         $dados = [
             'nome' => $_POST['nome'],
             'descricao' => $_POST['descricao'],
@@ -28,7 +45,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'estoque' => $_POST['estoque'],
             'ativo' => isset($_POST['ativo']) ? 1 : 0,
             'destaque' => isset($_POST['destaque']) ? 1 : 0,
-            'imagem' => 'placeholder.jpg'
+            'imagem' => $nomeImagem
         ];
         
         if ($produtoModel->create($dados)) {
@@ -40,6 +57,34 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     } elseif ($acao === 'editar') {
         $id = $_POST['id'];
+        
+        // Buscar produto atual para manter imagem se não houver upload
+        $produtoAtual = $produtoModel->findById($id);
+        $nomeImagem = $produtoAtual['imagem'] ?? 'default.jpg';
+        
+        // Processar upload de nova imagem
+        if (isset($_FILES['imagem']) && $_FILES['imagem']['error'] === UPLOAD_ERR_OK) {
+            $extensoesPermitidas = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
+            $nomeArquivo = $_FILES['imagem']['name'];
+            $extensao = strtolower(pathinfo($nomeArquivo, PATHINFO_EXTENSION));
+            
+            if (in_array($extensao, $extensoesPermitidas)) {
+                $nomeImagemNova = uniqid() . '_' . preg_replace('/[^a-zA-Z0-9._-]/', '', $nomeArquivo);
+                $caminhoDestino = __DIR__ . '/../public/assets/img/produtos/' . $nomeImagemNova;
+                
+                if (move_uploaded_file($_FILES['imagem']['tmp_name'], $caminhoDestino)) {
+                    // Deletar imagem antiga se não for default
+                    if ($nomeImagem !== 'default.jpg' && $nomeImagem !== 'placeholder.jpg') {
+                        $caminhoAntigo = __DIR__ . '/../public/assets/img/produtos/' . $nomeImagem;
+                        if (file_exists($caminhoAntigo)) {
+                            unlink($caminhoAntigo);
+                        }
+                    }
+                    $nomeImagem = $nomeImagemNova;
+                }
+            }
+        }
+        
         $dados = [
             'nome' => $_POST['nome'],
             'descricao' => $_POST['descricao'],
@@ -48,7 +93,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'categoria_id' => $_POST['categoria_id'],
             'estoque' => $_POST['estoque'],
             'ativo' => isset($_POST['ativo']) ? 1 : 0,
-            'destaque' => isset($_POST['destaque']) ? 1 : 0
+            'destaque' => isset($_POST['destaque']) ? 1 : 0,
+            'imagem' => $nomeImagem
         ];
         
         if ($produtoModel->update($id, $dados)) {
@@ -437,6 +483,7 @@ $categorias = $categoriaModel->findAll();
                             <th onclick="ordenarTabela('id')" style="cursor: pointer;" title="Clique para ordenar">
                                 ID <span id="sort-id">⇅</span>
                             </th>
+                            <th>Imagem</th>
                             <th onclick="ordenarTabela('nome')" style="cursor: pointer;" title="Clique para ordenar">
                                 Nome <span id="sort-nome">⇅</span>
                             </th>
@@ -471,6 +518,11 @@ $categorias = $categoriaModel->findAll();
                             data-status="<?php echo $produto['ativo'] ? 'ativo' : 'inativo'; ?>"
                             data-destaque="<?php echo $produto['destaque'] ? 'sim' : 'nao'; ?>">
                             <td><?php echo $produto['id']; ?></td>
+                            <td>
+                                <img src="<?php echo SITE_URL; ?>/public/assets/img/produtos/<?php echo $produto['imagem'] ?? 'default.jpg'; ?>" 
+                                     alt="<?php echo htmlspecialchars($produto['nome']); ?>"
+                                     style="width: 50px; height: 50px; object-fit: cover; border-radius: 5px; border: 1px solid #ddd;">
+                            </td>
                             <td><?php echo htmlspecialchars($produto['nome']); ?></td>
                             <td><?php echo htmlspecialchars($produto['categoria_nome'] ?? 'N/A'); ?></td>
                             <td>R$ <?php echo number_format($produto['preco'], 2, ',', '.'); ?></td>
@@ -501,7 +553,7 @@ $categorias = $categoriaModel->findAll();
                 <h2 id="modalTitulo">Novo Produto</h2>
                 <span class="close" onclick="fecharModal()">&times;</span>
             </div>
-            <form id="formProduto" method="POST">
+            <form id="formProduto" method="POST" enctype="multipart/form-data">
                 <input type="hidden" name="acao" id="acao" value="criar">
                 <input type="hidden" name="id" id="produtoId">
                 
@@ -513,6 +565,15 @@ $categorias = $categoriaModel->findAll();
                 <div class="form-group">
                     <label for="descricao">Descrição</label>
                     <textarea name="descricao" id="descricao"></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="imagem">Imagem do Produto</label>
+                    <input type="file" name="imagem" id="imagem" accept="image/*">
+                    <small style="display: block; margin-top: 5px; color: #666;">
+                        Formatos aceitos: JPG, JPEG, PNG, GIF, WEBP
+                    </small>
+                    <div id="previewImagem" style="margin-top: 10px;"></div>
                 </div>
                 
                 <div class="form-group">
@@ -585,12 +646,29 @@ $categorias = $categoriaModel->findAll();
     </div>
     
     <script>
+        // Preview de imagem
+        document.getElementById('imagem').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            const preview = document.getElementById('previewImagem');
+            
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    preview.innerHTML = `<img src="${e.target.result}" style="max-width: 200px; max-height: 200px; border-radius: 5px; border: 2px solid #ddd;">`;
+                }
+                reader.readAsDataURL(file);
+            } else {
+                preview.innerHTML = '';
+            }
+        });
+        
         function abrirModal(acao) {
             document.getElementById('modalProduto').style.display = 'block';
             document.getElementById('formProduto').reset();
             document.getElementById('acao').value = 'criar';
             document.getElementById('modalTitulo').textContent = 'Novo Produto';
             document.getElementById('ativo').checked = true;
+            document.getElementById('previewImagem').innerHTML = '';
         }
         
         function editarProduto(produto) {
@@ -606,6 +684,21 @@ $categorias = $categoriaModel->findAll();
             document.getElementById('estoque').value = produto.estoque;
             document.getElementById('ativo').checked = produto.ativo == 1;
             document.getElementById('destaque').checked = produto.destaque == 1;
+            
+            // Mostrar imagem atual
+            const preview = document.getElementById('previewImagem');
+            if (produto.imagem && produto.imagem !== 'default.jpg') {
+                preview.innerHTML = `
+                    <div style="margin-top: 10px;">
+                        <p style="margin-bottom: 5px; font-weight: 500;">Imagem atual:</p>
+                        <img src="<?php echo SITE_URL; ?>/public/assets/img/produtos/${produto.imagem}" 
+                             style="max-width: 200px; max-height: 200px; border-radius: 5px; border: 2px solid #ddd;">
+                        <p style="margin-top: 5px; font-size: 0.9em; color: #666;">Selecione uma nova imagem para substituir</p>
+                    </div>
+                `;
+            } else {
+                preview.innerHTML = '<p style="color: #666; margin-top: 10px;">Nenhuma imagem cadastrada</p>';
+            }
         }
         
         function fecharModal() {
