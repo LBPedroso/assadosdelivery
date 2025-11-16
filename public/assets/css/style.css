@@ -42,7 +42,7 @@ header {
 }
 
 .container {
-    max-width: 1200px;
+    max-width: 1400px;
     margin: 0 auto;
     padding: 0 20px;
 }
@@ -52,24 +52,26 @@ header {
     justify-content: space-between;
     align-items: center;
     padding: 1rem 0;
+    gap: 2rem;
 }
 
 .logo {
-    font-size: 2rem;
+    font-size: 1.8rem;
     font-weight: bold;
     text-decoration: none;
     color: white;
     display: flex;
     align-items: center;
     gap: 10px;
+    flex-shrink: 0;
 }
 
 .logo-icon {
-    font-size: 2.5rem;
+    font-size: 2.2rem;
 }
 
 .slogan {
-    font-size: 0.9rem;
+    font-size: 0.85rem;
     opacity: 0.9;
     font-style: italic;
 }
@@ -77,11 +79,17 @@ header {
 /* ============================================
    NAVEGAÇÃO
    ============================================ */
+nav {
+    flex-shrink: 1;
+    min-width: 0;
+}
+
 nav ul {
     list-style: none;
     display: flex;
-    gap: 1rem;
+    gap: 0.6rem;
     align-items: center;
+    flex-wrap: nowrap;
 }
 
 nav a {
@@ -89,9 +97,9 @@ nav a {
     text-decoration: none;
     font-weight: 500;
     transition: all 0.3s;
-    padding: 0.5rem 0.8rem;
+    padding: 0.5rem 0.7rem;
     border-radius: 5px;
-    font-size: 0.95rem;
+    font-size: 0.9rem;
     white-space: nowrap;
 }
 
@@ -103,7 +111,7 @@ nav a:hover {
 .btn-carrinho {
     position: relative;
     background-color: var(--cor-terciaria);
-    padding: 0.5rem 1.2rem !important;
+    padding: 0.5rem 1rem !important;
     border-radius: 25px;
 }
 
@@ -412,6 +420,30 @@ footer {
     
     .produtos-grid {
         grid-template-columns: 1fr;
+    }
+}
+
+/* Media query para telas médias/grandes com menu logado */
+@media (max-width: 1400px) {
+    .container {
+        max-width: 100%;
+    }
+    
+    nav ul {
+        gap: 0.4rem;
+    }
+    
+    nav a {
+        padding: 0.5rem 0.6rem;
+        font-size: 0.85rem;
+    }
+    
+    .logo {
+        font-size: 1.6rem;
+    }
+    
+    .logo-icon {
+        font-size: 2rem;
     }
 }
 
