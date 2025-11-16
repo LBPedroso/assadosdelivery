@@ -23,6 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'nome' => $_POST['nome'],
             'descricao' => $_POST['descricao'],
             'preco' => $_POST['preco'],
+            'unidade' => $_POST['unidade'],
             'categoria_id' => $_POST['categoria_id'],
             'estoque' => $_POST['estoque'],
             'ativo' => isset($_POST['ativo']) ? 1 : 0,
@@ -43,6 +44,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'nome' => $_POST['nome'],
             'descricao' => $_POST['descricao'],
             'preco' => $_POST['preco'],
+            'unidade' => $_POST['unidade'],
             'categoria_id' => $_POST['categoria_id'],
             'estoque' => $_POST['estoque'],
             'ativo' => isset($_POST['ativo']) ? 1 : 0,
@@ -230,6 +232,21 @@ $categorias = $categoriaModel->findAll();
         th {
             font-weight: 600;
             color: #495057;
+            user-select: none;
+        }
+        
+        th[onclick] {
+            transition: background 0.2s;
+        }
+        
+        th[onclick]:hover {
+            background: #e9ecef;
+        }
+        
+        th span {
+            opacity: 0.3;
+            font-size: 12px;
+            margin-left: 5px;
         }
         
         tr:hover {
@@ -367,27 +384,83 @@ $categorias = $categoriaModel->findAll();
             </div>
             <?php endif; ?>
             
+            <!-- Filtros -->
+            <div class="filtros-container" style="background: white; padding: 20px; border-radius: 8px; margin-bottom: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+                    <div>
+                        <label style="display: block; margin-bottom: 5px; font-weight: 500;">🔍 Buscar</label>
+                        <input type="text" id="filtroNome" placeholder="Nome do produto..." style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 5px;" onkeyup="filtrarProdutos()">
+                    </div>
+                    <div>
+                        <label style="display: block; margin-bottom: 5px; font-weight: 500;">📁 Categoria</label>
+                        <select id="filtroCategoria" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 5px;" onchange="filtrarProdutos()">
+                            <option value="">Todas</option>
+                            <?php foreach ($categorias as $cat): ?>
+                            <option value="<?php echo htmlspecialchars($cat['nome']); ?>"><?php echo htmlspecialchars($cat['nome']); ?></option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+                    <div>
+                        <label style="display: block; margin-bottom: 5px; font-weight: 500;">📊 Status</label>
+                        <select id="filtroStatus" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 5px;" onchange="filtrarProdutos()">
+                            <option value="">Todos</option>
+                            <option value="ativo">Ativo</option>
+                            <option value="inativo">Inativo</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label style="display: block; margin-bottom: 5px; font-weight: 500;">⭐ Destaque</label>
+                        <select id="filtroDestaque" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 5px;" onchange="filtrarProdutos()">
+                            <option value="">Todos</option>
+                            <option value="sim">Sim</option>
+                            <option value="nao">Não</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            
             <div class="tabela-container">
                 <table>
                     <thead>
                         <tr>
-                            <th>ID</th>
-                            <th>Nome</th>
-                            <th>Categoria</th>
-                            <th>Preço</th>
-                            <th>Estoque</th>
-                            <th>Status</th>
+                            <th onclick="ordenarTabela('id')" style="cursor: pointer;" title="Clique para ordenar">
+                                ID <span id="sort-id">⇅</span>
+                            </th>
+                            <th onclick="ordenarTabela('nome')" style="cursor: pointer;" title="Clique para ordenar">
+                                Nome <span id="sort-nome">⇅</span>
+                            </th>
+                            <th onclick="ordenarTabela('categoria')" style="cursor: pointer;" title="Clique para ordenar">
+                                Categoria <span id="sort-categoria">⇅</span>
+                            </th>
+                            <th onclick="ordenarTabela('preco')" style="cursor: pointer;" title="Clique para ordenar">
+                                Preço <span id="sort-preco">⇅</span>
+                            </th>
+                            <th>Unidade</th>
+                            <th onclick="ordenarTabela('estoque')" style="cursor: pointer;" title="Clique para ordenar">
+                                Estoque <span id="sort-estoque">⇅</span>
+                            </th>
+                            <th onclick="ordenarTabela('status')" style="cursor: pointer;" title="Clique para ordenar">
+                                Status <span id="sort-status">⇅</span>
+                            </th>
                             <th>Destaque</th>
                             <th>Ações</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody id="tabelaProdutos">
                         <?php foreach ($produtos as $produto): ?>
-                        <tr>
+                        <tr class="linha-produto" 
+                            data-id="<?php echo $produto['id']; ?>"
+                            data-nome="<?php echo strtolower(htmlspecialchars($produto['nome'])); ?>"
+                            data-categoria="<?php echo strtolower(htmlspecialchars($produto['categoria_nome'] ?? '')); ?>"
+                            data-preco="<?php echo $produto['preco']; ?>"
+                            data-estoque="<?php echo $produto['estoque']; ?>"
+                            data-status="<?php echo $produto['ativo'] ? 'ativo' : 'inativo'; ?>"
+                            data-destaque="<?php echo $produto['destaque'] ? 'sim' : 'nao'; ?>">
                             <td><?php echo $produto['id']; ?></td>
                             <td><?php echo htmlspecialchars($produto['nome']); ?></td>
                             <td><?php echo htmlspecialchars($produto['categoria_nome'] ?? 'N/A'); ?></td>
                             <td>R$ <?php echo number_format($produto['preco'], 2, ',', '.'); ?></td>
+                            <td><?php echo htmlspecialchars($produto['unidade'] ?? 'un'); ?></td>
                             <td><?php echo $produto['estoque']; ?></td>
                             <td>
                                 <span class="status-badge <?php echo $produto['ativo'] ? 'status-ativo' : 'status-inativo'; ?>">
@@ -441,6 +514,17 @@ $categorias = $categoriaModel->findAll();
                 <div class="form-group">
                     <label for="preco">Preço (R$) *</label>
                     <input type="number" name="preco" id="preco" step="0.01" min="0" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="unidade">Unidade de Medida *</label>
+                    <select name="unidade" id="unidade" required>
+                        <option value="un">un (Unidade)</option>
+                        <option value="kg">kg (Quilograma)</option>
+                        <option value="pct">pct (Pacote)</option>
+                        <option value="bandeja">bandeja</option>
+                        <option value="porção">porção</option>
+                    </select>
                 </div>
                 
                 <div class="form-group">
@@ -504,6 +588,7 @@ $categorias = $categoriaModel->findAll();
             document.getElementById('descricao').value = produto.descricao || '';
             document.getElementById('categoria_id').value = produto.categoria_id;
             document.getElementById('preco').value = produto.preco;
+            document.getElementById('unidade').value = produto.unidade || 'un';
             document.getElementById('estoque').value = produto.estoque;
             document.getElementById('ativo').checked = produto.ativo == 1;
             document.getElementById('destaque').checked = produto.destaque == 1;
@@ -521,6 +606,93 @@ $categorias = $categoriaModel->findAll();
         
         function fecharModalExcluir() {
             document.getElementById('modalExcluir').style.display = 'none';
+        }
+        
+        // Filtrar produtos
+        function filtrarProdutos() {
+            const filtroNome = document.getElementById('filtroNome').value.toLowerCase();
+            const filtroCategoria = document.getElementById('filtroCategoria').value.toLowerCase();
+            const filtroStatus = document.getElementById('filtroStatus').value;
+            const filtroDestaque = document.getElementById('filtroDestaque').value;
+            
+            const linhas = document.querySelectorAll('.linha-produto');
+            
+            linhas.forEach(linha => {
+                const nome = linha.dataset.nome;
+                const categoria = linha.dataset.categoria;
+                const status = linha.dataset.status;
+                const destaque = linha.dataset.destaque;
+                
+                let mostrar = true;
+                
+                // Filtro por nome
+                if (filtroNome && !nome.includes(filtroNome)) {
+                    mostrar = false;
+                }
+                
+                // Filtro por categoria
+                if (filtroCategoria && categoria !== filtroCategoria) {
+                    mostrar = false;
+                }
+                
+                // Filtro por status
+                if (filtroStatus && status !== filtroStatus) {
+                    mostrar = false;
+                }
+                
+                // Filtro por destaque
+                if (filtroDestaque && destaque !== filtroDestaque) {
+                    mostrar = false;
+                }
+                
+                linha.style.display = mostrar ? '' : 'none';
+            });
+        }
+        
+        // Ordenação da tabela
+        let ordemAtual = {};
+        
+        function ordenarTabela(coluna) {
+            const tbody = document.getElementById('tabelaProdutos');
+            const linhas = Array.from(tbody.querySelectorAll('.linha-produto'));
+            
+            // Alternar ordem (crescente/decrescente)
+            ordemAtual[coluna] = ordemAtual[coluna] === 'asc' ? 'desc' : 'asc';
+            const ordem = ordemAtual[coluna];
+            
+            // Resetar todos os ícones
+            document.querySelectorAll('th span').forEach(span => {
+                if (span.id.startsWith('sort-')) {
+                    span.textContent = '⇅';
+                    span.style.opacity = '0.3';
+                }
+            });
+            
+            // Atualizar ícone da coluna atual
+            const icone = document.getElementById('sort-' + coluna);
+            if (icone) {
+                icone.textContent = ordem === 'asc' ? '↑' : '↓';
+                icone.style.opacity = '1';
+            }
+            
+            // Ordenar linhas
+            linhas.sort((a, b) => {
+                let valorA = a.dataset[coluna];
+                let valorB = b.dataset[coluna];
+                
+                // Converter para número se for preço, estoque ou id
+                if (coluna === 'preco' || coluna === 'estoque' || coluna === 'id') {
+                    valorA = parseFloat(valorA) || 0;
+                    valorB = parseFloat(valorB) || 0;
+                }
+                
+                if (valorA < valorB) return ordem === 'asc' ? -1 : 1;
+                if (valorA > valorB) return ordem === 'asc' ? 1 : -1;
+                return 0;
+            });
+            
+            // Reorganizar DOM
+            linhas.forEach(linha => tbody.appendChild(linha));
         }
         
         // Fechar modal ao clicar fora
