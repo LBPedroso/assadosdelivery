@@ -34,14 +34,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acao']) && $_POST['ac
         'nome' => $_POST['nome'] ?? '',
         'email' => $_POST['email'] ?? '',
         'telefone' => $_POST['telefone'] ?? '',
+        'cpf' => $_POST['cpf'] ?? '',
         'senha' => $_POST['senha'] ?? '',
-        'endereco' => $_POST['endereco'] ?? '',
-        'numero' => $_POST['numero'] ?? '',
-        'complemento' => $_POST['complemento'] ?? '',
-        'bairro' => $_POST['bairro'] ?? '',
-        'cidade' => $_POST['cidade'] ?? 'Campo Mourão',
-        'estado' => $_POST['estado'] ?? 'PR',
-        'cep' => $_POST['cep'] ?? ''
+        'endereco_rua' => $_POST['endereco'] ?? '',
+        'endereco_numero' => $_POST['numero'] ?? '',
+        'endereco_complemento' => $_POST['complemento'] ?? '',
+        'endereco_bairro' => $_POST['bairro'] ?? '',
+        'endereco_cidade' => $_POST['cidade'] ?? 'Campo Mourão',
+        'endereco_estado' => $_POST['estado'] ?? 'PR',
+        'endereco_cep' => $_POST['cep'] ?? ''
     ];
     
     // Confirmar senha
@@ -183,6 +184,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acao']) && $_POST['ac
                     <div class="form-group">
                         <label for="cad-telefone">Telefone *</label>
                         <input type="tel" id="cad-telefone" name="telefone" placeholder="(44) 99999-9999" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="cad-cpf">CPF</label>
+                        <input type="text" id="cad-cpf" name="cpf" placeholder="000.000.000-00" maxlength="14">
                     </div>
                     
                     <div class="form-group">
