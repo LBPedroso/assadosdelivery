@@ -9,6 +9,35 @@ AuthController::requireAdmin();
 
 $clienteModel = new Cliente();
 
+// Função para formatar telefone
+function formatarTelefone($telefone) {
+    $telefone = preg_replace('/\D/', '', $telefone); // Remove tudo que não é número
+    if (strlen($telefone) == 11) {
+        return '(' . substr($telefone, 0, 2) . ') ' . substr($telefone, 2, 5) . '-' . substr($telefone, 7);
+    } elseif (strlen($telefone) == 10) {
+        return '(' . substr($telefone, 0, 2) . ') ' . substr($telefone, 2, 4) . '-' . substr($telefone, 6);
+    }
+    return $telefone;
+}
+
+// Função para formatar CPF
+function formatarCPF($cpf) {
+    $cpf = preg_replace('/\D/', '', $cpf); // Remove tudo que não é número
+    if (strlen($cpf) == 11) {
+        return substr($cpf, 0, 3) . '.' . substr($cpf, 3, 3) . '.' . substr($cpf, 6, 3) . '-' . substr($cpf, 9, 2);
+    }
+    return $cpf;
+}
+
+// Função para formatar CEP
+function formatarCEP($cep) {
+    $cep = preg_replace('/\D/', '', $cep); // Remove tudo que não é número
+    if (strlen($cep) == 8) {
+        return substr($cep, 0, 5) . '-' . substr($cep, 5);
+    }
+    return $cep;
+}
+
 // Buscar estatísticas dos clientes
 $db = Database::getInstance()->getConnection();
 
@@ -329,20 +358,20 @@ $clientes = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     <div class="cliente-info">
                         <h3><?php echo htmlspecialchars($cliente['nome']); ?></h3>
                         <p>📧 <?php echo htmlspecialchars($cliente['email']); ?></p>
-                        <p>📱 <?php echo htmlspecialchars($cliente['telefone'] ?? 'Não informado'); ?></p>
+                        <p>📱 <?php echo !empty($cliente['telefone']) ? formatarTelefone($cliente['telefone']) : 'Não informado'; ?></p>
                         <?php if (!empty($cliente['endereco_rua'])): ?>
                         <p>📍 <?php echo htmlspecialchars($cliente['endereco_rua']); ?>, <?php echo htmlspecialchars($cliente['endereco_numero'] ?? 's/n'); ?> - <?php echo htmlspecialchars($cliente['endereco_bairro'] ?? ''); ?></p>
                         <p style="margin-left: 1.5rem; color: #666;">
                             <?php echo htmlspecialchars($cliente['endereco_cidade'] ?? ''); ?>/<?php echo htmlspecialchars($cliente['endereco_estado'] ?? ''); ?>
                             <?php if (!empty($cliente['endereco_cep'])): ?>
-                                - CEP: <?php echo htmlspecialchars($cliente['endereco_cep']); ?>
+                                - CEP: <?php echo formatarCEP($cliente['endereco_cep']); ?>
                             <?php endif; ?>
                         </p>
                         <?php else: ?>
                         <p>📍 Endereço não cadastrado</p>
                         <?php endif; ?>
                         <?php if (!empty($cliente['cpf'])): ?>
-                        <p>🆔 CPF: <?php echo htmlspecialchars($cliente['cpf']); ?></p>
+                        <p>🆔 CPF: <?php echo formatarCPF($cliente['cpf']); ?></p>
                         <?php endif; ?>
                         <p>📅 Cliente desde <?php echo date('d/m/Y', strtotime($cliente['criado_em'])); ?></p>
                         <?php if ($cliente['ultimo_pedido']): ?>
