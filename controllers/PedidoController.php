@@ -82,6 +82,53 @@ class PedidoController {
     }
     
     /**
+     * Criar pedido do checkout
+     */
+    public function criarPedido($dados) {
+        try {
+            // Obter itens do carrinho (virá via JavaScript)
+            if (!isset($_POST['carrinho_json'])) {
+                // Se não veio via POST, retornar false
+                return false;
+            }
+            
+            $carrinho = json_decode($_POST['carrinho_json'], true);
+            
+            if (empty($carrinho)) {
+                return false;
+            }
+            
+            // Calcular valores
+            $subtotal = 0;
+            foreach ($carrinho as $item) {
+                $subtotal += $item['preco'] * $item['quantidade'];
+            }
+            
+            $taxa_entrega = $subtotal >= 50 ? 0 : 5.00;
+            $total = $subtotal + $taxa_entrega;
+            
+            // Criar pedido no banco
+            $pedidoId = $this->pedidoModel->criarPedido(
+                $dados['cliente_id'],
+                $carrinho,
+                $total,
+                $taxa_entrega,
+                [
+                    'data_entrega' => $dados['data_entrega'],
+                    'forma_pagamento' => $dados['forma_pagamento'],
+                    'observacoes' => $dados['observacoes']
+                ]
+            );
+            
+            return $pedidoId;
+            
+        } catch (Exception $e) {
+            error_log("Erro ao criar pedido: " . $e->getMessage());
+            return false;
+        }
+    }
+    
+    /**
      * Atualizar status do pedido
      */
     public function atualizarStatus($pedido_id, $novo_status) {
