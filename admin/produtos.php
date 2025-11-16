@@ -409,6 +409,17 @@ $categorias = $categoriaModel->findAll();
                         </select>
                     </div>
                     <div>
+                        <label style="display: block; margin-bottom: 5px; font-weight: 500;">⚖️ Unidade</label>
+                        <select id="filtroUnidade" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 5px;" onchange="filtrarProdutos()">
+                            <option value="">Todas</option>
+                            <option value="un">un (Unidade)</option>
+                            <option value="kg">kg (Quilograma)</option>
+                            <option value="pct">pct (Pacote)</option>
+                            <option value="bandeja">bandeja</option>
+                            <option value="porção">porção</option>
+                        </select>
+                    </div>
+                    <div>
                         <label style="display: block; margin-bottom: 5px; font-weight: 500;">⭐ Destaque</label>
                         <select id="filtroDestaque" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 5px;" onchange="filtrarProdutos()">
                             <option value="">Todos</option>
@@ -435,7 +446,9 @@ $categorias = $categoriaModel->findAll();
                             <th onclick="ordenarTabela('preco')" style="cursor: pointer;" title="Clique para ordenar">
                                 Preço <span id="sort-preco">⇅</span>
                             </th>
-                            <th>Unidade</th>
+                            <th onclick="ordenarTabela('unidade')" style="cursor: pointer;" title="Clique para ordenar">
+                                Unidade <span id="sort-unidade">⇅</span>
+                            </th>
                             <th onclick="ordenarTabela('estoque')" style="cursor: pointer;" title="Clique para ordenar">
                                 Estoque <span id="sort-estoque">⇅</span>
                             </th>
@@ -453,6 +466,7 @@ $categorias = $categoriaModel->findAll();
                             data-nome="<?php echo strtolower(htmlspecialchars($produto['nome'])); ?>"
                             data-categoria="<?php echo strtolower(htmlspecialchars($produto['categoria_nome'] ?? '')); ?>"
                             data-preco="<?php echo $produto['preco']; ?>"
+                            data-unidade="<?php echo strtolower(htmlspecialchars($produto['unidade'] ?? 'un')); ?>"
                             data-estoque="<?php echo $produto['estoque']; ?>"
                             data-status="<?php echo $produto['ativo'] ? 'ativo' : 'inativo'; ?>"
                             data-destaque="<?php echo $produto['destaque'] ? 'sim' : 'nao'; ?>">
@@ -613,6 +627,7 @@ $categorias = $categoriaModel->findAll();
             const filtroNome = document.getElementById('filtroNome').value.toLowerCase();
             const filtroCategoria = document.getElementById('filtroCategoria').value.toLowerCase();
             const filtroStatus = document.getElementById('filtroStatus').value;
+            const filtroUnidade = document.getElementById('filtroUnidade').value.toLowerCase();
             const filtroDestaque = document.getElementById('filtroDestaque').value;
             
             const linhas = document.querySelectorAll('.linha-produto');
@@ -621,6 +636,7 @@ $categorias = $categoriaModel->findAll();
                 const nome = linha.dataset.nome;
                 const categoria = linha.dataset.categoria;
                 const status = linha.dataset.status;
+                const unidade = linha.dataset.unidade;
                 const destaque = linha.dataset.destaque;
                 
                 let mostrar = true;
@@ -637,6 +653,11 @@ $categorias = $categoriaModel->findAll();
                 
                 // Filtro por status
                 if (filtroStatus && status !== filtroStatus) {
+                    mostrar = false;
+                }
+                
+                // Filtro por unidade
+                if (filtroUnidade && unidade !== filtroUnidade) {
                     mostrar = false;
                 }
                 
