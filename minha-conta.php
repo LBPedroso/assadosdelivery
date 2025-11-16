@@ -262,5 +262,49 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['atualizar'])) {
         .status-entregue { background: #6c757d; color: #fff; }
         .status-cancelado { background: #dc3545; color: #fff; }
     </style>
+
+    <script>
+        // Máscaras de formatação
+        document.addEventListener('DOMContentLoaded', function() {
+            // Máscara para telefone (44) 99999-9999
+            const telefoneInput = document.querySelector('input[name="telefone"]');
+            if (telefoneInput) {
+                telefoneInput.addEventListener('input', function(e) {
+                    let value = e.target.value.replace(/\D/g, '');
+                    if (value.length <= 11) {
+                        value = value.replace(/^(\d{2})(\d)/g, '($1) $2');
+                        value = value.replace(/(\d)(\d{4})$/, '$1-$2');
+                    }
+                    e.target.value = value;
+                });
+            }
+
+            // Máscara para CPF 000.000.000-00
+            const cpfInput = document.querySelector('input[name="cpf"]');
+            if (cpfInput) {
+                cpfInput.addEventListener('input', function(e) {
+                    let value = e.target.value.replace(/\D/g, '');
+                    if (value.length <= 11) {
+                        value = value.replace(/(\d{3})(\d)/, '$1.$2');
+                        value = value.replace(/(\d{3})(\d)/, '$1.$2');
+                        value = value.replace(/(\d{3})(\d{1,2})$/, '$1-$2');
+                    }
+                    e.target.value = value;
+                });
+            }
+
+            // Máscara para CEP 00000-000
+            const cepInput = document.querySelector('input[name="cep"]');
+            if (cepInput) {
+                cepInput.addEventListener('input', function(e) {
+                    let value = e.target.value.replace(/\D/g, '');
+                    if (value.length <= 8) {
+                        value = value.replace(/(\d{5})(\d)/, '$1-$2');
+                    }
+                    e.target.value = value;
+                });
+            }
+        });
+    </script>
 </body>
 </html>
