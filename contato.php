@@ -87,6 +87,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             font-size: 14px;
         }
         
+        .whatsapp-link {
+            transition: all 0.3s ease;
+        }
+        
+        .whatsapp-link:hover {
+            color: #128C7E !important;
+            transform: scale(1.05);
+        }
+        
+        .email-link:hover {
+            color: #C5303A !important;
+            text-decoration: underline !important;
+        }
+        
         .contato-form {
             background: white;
             padding: 30px;
@@ -199,7 +213,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <div class="icon">📱</div>
                     <div class="content">
                         <h3>WhatsApp / Telefone</h3>
-                        <p>(44) 99968-0220</p>
+                        <p>
+                            <a href="https://wa.me/5544999680220?text=Olá!%20Gostaria%20de%20fazer%20um%20pedido%20de%20assados." 
+                               target="_blank" 
+                               class="whatsapp-link"
+                               style="color: #25D366; text-decoration: none; font-weight: 600; display: inline-flex; align-items: center; gap: 8px;">
+                                <span style="font-size: 20px;">💬</span>
+                                (44) 99968-0220
+                            </a>
+                        </p>
+                        <small style="color: #999; display: block; margin-top: 5px;">Clique para conversar no WhatsApp</small>
                     </div>
                 </div>
                 
@@ -207,7 +230,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <div class="icon">📧</div>
                     <div class="content">
                         <h3>E-mail</h3>
-                        <p>contato@assadosdelivery.com</p>
+                        <p>
+                            <a href="mailto:contato@assadosdelivery.com" 
+                               class="email-link"
+                               style="color: #E63946; text-decoration: none; font-weight: 600;">
+                                contato@assadosdelivery.com
+                            </a>
+                        </p>
+                        <small style="color: #999; display: block; margin-top: 5px;">Clique para enviar e-mail</small>
                     </div>
                 </div>
                 
