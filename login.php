@@ -1,5 +1,6 @@
 <?php
 require_once 'config/config.php';
+require_once 'config/helpers.php';
 require_once 'controllers/AuthController.php';
 
 $authController = new AuthController();
@@ -45,9 +46,36 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acao']) && $_POST['ac
         'endereco_cep' => $_POST['cep'] ?? ''
     ];
     
+    // Validações
+    $erros = [];
+    
+    // Validar CPF
+    if (!empty($dados['cpf']) && !validarCPF($dados['cpf'])) {
+        $erros[] = 'CPF inválido';
+    }
+    
+    // Validar email
+    if (!validarEmail($dados['email'])) {
+        $erros[] = 'Email inválido';
+    }
+    
+    // Validar telefone
+    if (!empty($dados['telefone']) && !validarTelefone($dados['telefone'])) {
+        $erros[] = 'Telefone inválido';
+    }
+    
+    // Validar CEP
+    if (!empty($dados['endereco_cep']) && !validarCEP($dados['endereco_cep'])) {
+        $erros[] = 'CEP inválido';
+    }
+    
     // Confirmar senha
     if ($dados['senha'] !== ($_POST['confirmar_senha'] ?? '')) {
-        $erro = 'As senhas não conferem';
+        $erros[] = 'As senhas não conferem';
+    }
+    
+    if (!empty($erros)) {
+        $erro = implode('<br>', $erros);
     } else {
         $resultado = $authController->registrarCliente($dados);
         
@@ -241,6 +269,39 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acao']) && $_POST['ac
     <?php include 'views/partials/footer.php'; ?>
 
     <script>
+        // Função para validar CPF
+        function validarCPF(cpf) {
+            cpf = cpf.replace(/\D/g, ''); // Remove caracteres não numéricos
+            
+            // Verifica se tem 11 dígitos
+            if (cpf.length !== 11) return false;
+            
+            // Verifica se todos os dígitos são iguais (CPF inválido)
+            if (/^(\d)\1{10}$/.test(cpf)) return false;
+            
+            // Validação do primeiro dígito verificador
+            let soma = 0;
+            for (let i = 0; i < 9; i++) {
+                soma += parseInt(cpf.charAt(i)) * (10 - i);
+            }
+            let resto = 11 - (soma % 11);
+            let digito1 = resto >= 10 ? 0 : resto;
+            
+            if (digito1 !== parseInt(cpf.charAt(9))) return false;
+            
+            // Validação do segundo dígito verificador
+            soma = 0;
+            for (let i = 0; i < 10; i++) {
+                soma += parseInt(cpf.charAt(i)) * (11 - i);
+            }
+            resto = 11 - (soma % 11);
+            let digito2 = resto >= 10 ? 0 : resto;
+            
+            if (digito2 !== parseInt(cpf.charAt(10))) return false;
+            
+            return true;
+        }
+
         // Máscara para telefone (44) 99999-9999
         document.getElementById('cad-telefone').addEventListener('input', function(e) {
             let value = e.target.value.replace(/\D/g, ''); // Remove tudo que não é número
@@ -253,8 +314,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acao']) && $_POST['ac
             e.target.value = value;
         });
 
-        // Máscara para CPF 000.000.000-00
-        document.getElementById('cad-cpf').addEventListener('input', function(e) {
+        // Máscara para CPF 000.000.000-00 com validação
+        const cpfInput = document.getElementById('cad-cpf');
+        
+        cpfInput.addEventListener('input', function(e) {
             let value = e.target.value.replace(/\D/g, ''); // Remove tudo que não é número
             
             if (value.length <= 11) {
@@ -264,6 +327,55 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acao']) && $_POST['ac
             }
             
             e.target.value = value;
+        });
+        
+        // Validar CPF ao sair do campo
+        cpfInput.addEventListener('blur', function(e) {
+            const cpf = e.target.value.replace(/\D/g, '');
+            
+            if (cpf.length === 0) return; // Campo vazio, não valida
+            
+            if (!validarCPF(cpf)) {
+                e.target.style.borderColor = '#dc3545';
+                e.target.style.backgroundColor = '#ffe6e6';
+                
+                // Remove mensagem anterior se existir
+                const msgAnterior = e.target.parentElement.querySelector('.cpf-erro');
+                if (msgAnterior) msgAnterior.remove();
+                
+                // Adiciona mensagem de erro
+                const msgErro = document.createElement('small');
+                msgErro.className = 'cpf-erro';
+                msgErro.style.color = '#dc3545';
+                msgErro.style.display = 'block';
+                msgErro.style.marginTop = '5px';
+                msgErro.textContent = '❌ CPF inválido';
+                e.target.parentElement.appendChild(msgErro);
+            } else {
+                e.target.style.borderColor = '#28a745';
+                e.target.style.backgroundColor = '#e6ffe6';
+                
+                // Remove mensagem de erro se existir
+                const msgErro = e.target.parentElement.querySelector('.cpf-erro');
+                if (msgErro) msgErro.remove();
+                
+                // Adiciona mensagem de sucesso
+                const msgSucesso = document.createElement('small');
+                msgSucesso.className = 'cpf-erro';
+                msgSucesso.style.color = '#28a745';
+                msgSucesso.style.display = 'block';
+                msgSucesso.style.marginTop = '5px';
+                msgSucesso.textContent = '✅ CPF válido';
+                e.target.parentElement.appendChild(msgSucesso);
+            }
+        });
+        
+        // Limpar validação ao focar
+        cpfInput.addEventListener('focus', function(e) {
+            e.target.style.borderColor = '';
+            e.target.style.backgroundColor = '';
+            const msg = e.target.parentElement.querySelector('.cpf-erro');
+            if (msg) msg.remove();
         });
 
         // Máscara para CEP 00000-000
@@ -275,6 +387,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acao']) && $_POST['ac
             }
             
             e.target.value = value;
+        });
+        
+        // Validar formulário antes de enviar
+        document.querySelector('form').addEventListener('submit', function(e) {
+            const cpf = document.getElementById('cad-cpf').value.replace(/\D/g, '');
+            
+            if (cpf.length > 0 && !validarCPF(cpf)) {
+                e.preventDefault();
+                alert('❌ Por favor, insira um CPF válido antes de continuar.');
+                document.getElementById('cad-cpf').focus();
+                return false;
+            }
         });
     </script>
 </body>

@@ -1,5 +1,6 @@
 <?php
 require_once 'config/config.php';
+require_once 'config/helpers.php';
 require_once 'controllers/AuthController.php';
 require_once 'models/Cliente.php';
 require_once 'models/Pedido.php';
