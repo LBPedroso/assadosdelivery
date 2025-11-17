@@ -288,12 +288,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </div>
         
         <div class="mapa-container">
-            <h2>Nossa Região de Atendimento</h2>
+            <h2>Nossa Localização</h2>
             <p style="color: #666; margin-bottom: 20px;">
-                Atendemos toda a região de Campo Mourão - PR. Entre em contato para confirmar se entregamos no seu bairro!
+                📍 Campo Mourão - PR | Atendemos toda a região. Entre em contato para confirmar se entregamos no seu bairro!
             </p>
-            <div style="background: #f0f0f0; padding: 100px; text-align: center; border-radius: 5px; color: #999;">
-                [Mapa de Campo Mourão - PR]
+            <div style="border-radius: 10px; overflow: hidden; box-shadow: 0 5px 20px rgba(0,0,0,0.1);">
+                <iframe 
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d58042.35848799934!2d-52.40888073261718!3d-24.045887999999998!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x94ecf573fe068e31%3A0x5d238bf3c59c51a0!2sCampo%20Mour%C3%A3o%2C%20PR!5e0!3m2!1spt-BR!2sbr!4v1700000000000!5m2!1spt-BR!2sbr" 
+                    width="100%" 
+                    height="400" 
+                    style="border:0;" 
+                    allowfullscreen="" 
+                    loading="lazy" 
+                    referrerpolicy="no-referrer-when-downgrade">
+                </iframe>
             </div>
         </div>
     </main>
