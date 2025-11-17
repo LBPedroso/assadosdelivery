@@ -10,12 +10,11 @@ if (!$clienteId) {
 }
 
 try {
-    $db = Database::getInstance();
+    $db = Database::getInstance()->getConnection();
     
-    $sql = "SELECT * FROM pedidos WHERE cliente_id = :cliente_id ORDER BY criado_em DESC";
+    $sql = "SELECT * FROM pedidos WHERE cliente_id = ? ORDER BY criado_em DESC";
     $stmt = $db->prepare($sql);
-    $stmt->bindParam(':cliente_id', $clienteId);
-    $stmt->execute();
+    $stmt->execute([$clienteId]);
     $pedidos = $stmt->fetchAll(PDO::FETCH_ASSOC);
     
     echo json_encode([
