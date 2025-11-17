@@ -261,8 +261,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acao']) && $_POST['ac
                     </div>
                     
                     <div class="form-group">
-                        <label for="cad-cep">CEP *</label>
-                        <input type="text" id="cad-cep" name="cep" placeholder="87300-000" required>
+                        <label for="cad-cep">CEP</label>
+                        <input type="text" id="cad-cep" name="cep" placeholder="87300-000">
                     </div>
                     
                     <button type="submit" class="btn btn-secondary" style="width: 100%; padding: 1rem;">
