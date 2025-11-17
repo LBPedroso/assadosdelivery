@@ -24,11 +24,11 @@ class AuthController {
     /**
      * Login de cliente
      */
-    public function loginCliente($email, $senha) {
-        $cliente = $this->clienteModel->findByEmail($email);
+    public function loginCliente($emailOrTelefone, $senha) {
+        $cliente = $this->clienteModel->findByEmailOrTelefone($emailOrTelefone);
         
         if (!$cliente) {
-            return ['success' => false, 'message' => 'Email não cadastrado'];
+            return ['success' => false, 'message' => 'Email/telefone não cadastrado'];
         }
         
         if (!password_verify($senha, $cliente['senha'])) {
@@ -75,18 +75,23 @@ class AuthController {
      * Registrar novo cliente
      */
     public function registrarCliente($dados) {
-        // Validar dados
-        if (empty($dados['nome']) || empty($dados['email']) || empty($dados['senha'])) {
-            return ['success' => false, 'message' => 'Preencha todos os campos obrigatórios'];
+        // Validar dados básicos
+        if (empty($dados['nome']) || empty($dados['senha'])) {
+            return ['success' => false, 'message' => 'Preencha nome e senha'];
         }
         
-        // Verificar se email já existe
-        if ($this->clienteModel->findByEmail($dados['email'])) {
+        // Validar que pelo menos email OU telefone foi informado
+        if (empty($dados['email']) && empty($dados['telefone'])) {
+            return ['success' => false, 'message' => 'Informe pelo menos um email ou telefone'];
+        }
+        
+        // Verificar se email já existe (apenas se foi informado)
+        if (!empty($dados['email']) && $this->clienteModel->findByEmail($dados['email'])) {
             return ['success' => false, 'message' => 'Este email já está cadastrado'];
         }
         
-        // Validar email
-        if (!filter_var($dados['email'], FILTER_VALIDATE_EMAIL)) {
+        // Validar email (apenas se foi informado)
+        if (!empty($dados['email']) && !filter_var($dados['email'], FILTER_VALIDATE_EMAIL)) {
             return ['success' => false, 'message' => 'Email inválido'];
         }
         

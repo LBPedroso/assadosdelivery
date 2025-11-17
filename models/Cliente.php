@@ -13,9 +13,38 @@ class Cliente extends Model {
      * Buscar cliente por email
      */
     public function findByEmail($email) {
+        if (empty($email)) {
+            return null;
+        }
         $sql = "SELECT * FROM {$this->table} WHERE email = ?";
         $stmt = $this->db->prepare($sql);
         $stmt->execute([$email]);
+        return $stmt->fetch();
+    }
+    
+    /**
+     * Buscar cliente por telefone
+     */
+    public function findByTelefone($telefone) {
+        if (empty($telefone)) {
+            return null;
+        }
+        $sql = "SELECT * FROM {$this->table} WHERE telefone = ?";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute([$telefone]);
+        return $stmt->fetch();
+    }
+    
+    /**
+     * Buscar cliente por email OU telefone
+     */
+    public function findByEmailOrTelefone($emailOrTelefone) {
+        if (empty($emailOrTelefone)) {
+            return null;
+        }
+        $sql = "SELECT * FROM {$this->table} WHERE email = ? OR telefone = ?";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute([$emailOrTelefone, $emailOrTelefone]);
         return $stmt->fetch();
     }
     

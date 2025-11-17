@@ -49,17 +49,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acao']) && $_POST['ac
     // Validações
     $erros = [];
     
+    // Validar que pelo menos email OU telefone foi informado
+    if (empty($dados['email']) && empty($dados['telefone'])) {
+        $erros[] = 'Informe pelo menos um e-mail ou telefone para contato';
+    }
+    
     // Validar CPF
     if (!empty($dados['cpf']) && !validarCPF($dados['cpf'])) {
         $erros[] = 'CPF inválido';
     }
     
-    // Validar email
-    if (!validarEmail($dados['email'])) {
+    // Validar email (apenas se informado)
+    if (!empty($dados['email']) && !validarEmail($dados['email'])) {
         $erros[] = 'Email inválido';
     }
     
-    // Validar telefone
+    // Validar telefone (apenas se informado)
     if (!empty($dados['telefone']) && !validarTelefone($dados['telefone'])) {
         $erros[] = 'Telefone inválido';
     }
@@ -177,8 +182,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acao']) && $_POST['ac
                     <input type="hidden" name="acao" value="login">
                     
                     <div class="form-group">
-                        <label for="login-email">Email</label>
-                        <input type="email" id="login-email" name="email" required>
+                        <label for="login-email">Email ou Telefone</label>
+                        <input type="text" id="login-email" name="email" required placeholder="email@exemplo.com ou (44) 99999-9999">
                     </div>
                     
                     <div class="form-group">
@@ -205,13 +210,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acao']) && $_POST['ac
                     </div>
                     
                     <div class="form-group">
-                        <label for="cad-email">Email *</label>
-                        <input type="email" id="cad-email" name="email" required>
+                        <label for="cad-email">Email</label>
+                        <input type="email" id="cad-email" name="email">
+                        <small style="color: #666;">* Informe pelo menos email ou telefone</small>
                     </div>
                     
                     <div class="form-group">
-                        <label for="cad-telefone">Telefone *</label>
-                        <input type="tel" id="cad-telefone" name="telefone" placeholder="(44) 99999-9999" required>
+                        <label for="cad-telefone">Telefone</label>
+                        <input type="tel" id="cad-telefone" name="telefone" placeholder="(44) 99999-9999">
+                        <small style="color: #666;">* Informe pelo menos email ou telefone</small>
                     </div>
                     
                     <div class="form-group">
