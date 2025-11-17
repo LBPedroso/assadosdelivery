@@ -1,0 +1,22 @@
+ALUNO: LUÃ BOLIVAR PEDROSO
+CURSO: TADS
+
+Projeto: Assados Delivery
+Versão: v1.1.0
+
+Instruções rápidas para execução local (XAMPP):
+1) Copie a pasta do projeto para o diretório do servidor, por exemplo: C:\xampp\htdocs\assados-delivery
+2) Importe o SQL para criar o banco de dados (arquivo principal): database/schema.sql
+   - Opcional: database/tornar_email_telefone_opcionais.sql (alterações adicionais / migração)
+3) Configure as credenciais do banco em: config/database.php (usuário/senha/host)
+4) Acesse no navegador: http://localhost:8080/assados-delivery/ (ajuste a porta se necessário)
+
+Observações:
+- Este pacote inclui validações de CPF, integração com WhatsApp, Google Maps na página de contato e correções de API.
+- Tag publicada no GitHub: v1.1.0
+
+Contato do desenvolvedor (para dúvidas):
+- WhatsApp: +55 44 99968-0220
+- Repositório GitHub: https://github.com/LBPedroso/assadosdelivery
+
+Boa sorte na entrega!
