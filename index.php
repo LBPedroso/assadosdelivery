@@ -19,10 +19,20 @@ $categorias = $categoriaModel->findAtivas();
         <div class="header-top">
             <div class="container" style="display: flex; justify-content: space-between; align-items: center;">
                 <div>
-                    📞 Contato: (44) 99968-0220 | 📧 contato@assadosdelivery.com
+                    📞 
+                    <a href="https://wa.me/5544999680220?text=Olá!%20Gostaria%20de%20fazer%20um%20pedido." 
+                       target="_blank" 
+                       style="color: white; text-decoration: none; font-weight: 600;">
+                        (44) 99968-0220
+                    </a>
+                     | 📧 
+                    <a href="mailto:contato@assadosdelivery.com" 
+                       style="color: white; text-decoration: none;">
+                        contato@assadosdelivery.com
+                    </a>
                 </div>
                 <div>
-                    ⏰ Aberto apenas aos Sábados e Domingos (10h às 15h), agendamento a semana toda
+                    📅 Seg-Sex: Pedidos | 🚚 Sáb-Dom: Entregas e Retiradas
                 </div>
             </div>
         </div>

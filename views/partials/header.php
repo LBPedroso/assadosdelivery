@@ -8,7 +8,7 @@ if (session_status() === PHP_SESSION_NONE) {
     <div class="header-top">
         <div class="container" style="display: flex; justify-content: space-between; align-items: center;">
             <div>
-                � 
+                📞 
                 <a href="https://wa.me/5544999680220?text=Olá!%20Gostaria%20de%20fazer%20um%20pedido." 
                    target="_blank" 
                    style="color: white; text-decoration: none; font-weight: 600;">
