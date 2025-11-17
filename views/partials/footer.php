@@ -26,8 +26,17 @@
             
             <div class="footer-section">
                 <h3>Contato</h3>
-                <p>📞 (44) 99968-0220<br>
-                📧 contato@assadosdelivery.com<br>
+                <p>� 
+                <a href="https://wa.me/5544999680220?text=Olá!%20Gostaria%20de%20fazer%20um%20pedido." 
+                   target="_blank" 
+                   style="color: #25D366; text-decoration: none; font-weight: 600;">
+                    (44) 99968-0220
+                </a><br>
+                📧 
+                <a href="mailto:contato@assadosdelivery.com" 
+                   style="color: white; text-decoration: none;">
+                    contato@assadosdelivery.com
+                </a><br>
                 📍 Campo Mourão, PR</p>
             </div>
         </div>

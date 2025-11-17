@@ -138,7 +138,12 @@ if (!$pedidoId) {
             </div>
 
             <p style="margin-top: 2rem; color: #999; font-size: 0.9rem;">
-                Dúvidas? Entre em contato: (44) 99968-0220
+                Dúvidas? Entre em contato: 
+                <a href="https://wa.me/5544999680220?text=Olá!%20Tenho%20dúvidas%20sobre%20meu%20pedido." 
+                   target="_blank" 
+                   style="color: #25D366; text-decoration: none; font-weight: 600;">
+                    📱 (44) 99968-0220
+                </a>
             </p>
         </div>
     </div>
