@@ -1,23 +1,69 @@
-# Arquivos do sistema
+# ================================================
+# .gitignore - Assados Delivery
+# Arquivos e pastas que NÃO devem ser versionados
+# ================================================
+
+# ================================================
+# ARQUIVOS SENSÍVEIS (NUNCA COMMITAR!)
+# ================================================
+# config/database.php (descomente se não quiser versionar)
+.env
+.env.local
+*.key
+*.pem
+
+# ================================================
+# PASTAS DO SISTEMA
+# ================================================
 .DS_Store
 Thumbs.db
 desktop.ini
-
-# IDEs
 .vscode/
 .idea/
 *.swp
 *.swo
 *~
 
-# Logs
+# ================================================
+# LOGS
+# ================================================
 *.log
 error_log
 access_log
 
-# Arquivos temporários
+# ================================================
+# ARQUIVOS TEMPORÁRIOS
+# ================================================
 *.tmp
 *.temp
+*.cache
+*.bak
+
+# ================================================
+# ARQUIVOS DE SUBMISSÃO (ZIPs)
+# ================================================
+*.zip
+*.rar
+*.tar.gz
+
+# ================================================
+# BACKUPS DE BANCO
+# ================================================
+*.sql.backup
+backup/
+
+# ================================================
+# NODE MODULES (se usar no futuro)
+# ================================================
+node_modules/
+package-lock.json
+yarn.lock
+
+# ================================================
+# COMPOSER (se usar no futuro)
+# ================================================
+vendor/
+composer.lock
 *.cache
 
 # Node modules (caso use futuramente)
