@@ -1,6 +1,7 @@
 <?php
 session_start();
 require_once __DIR__ . '/config/config.php';
+require_once __DIR__ . '/config/database.php';
 
 $mensagem = '';
 $tipo = '';
@@ -14,14 +15,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $mensagemTexto = $_POST['mensagem'] ?? '';
     
     // Validação simples
-    if (empty($nome) || empty($email) || empty($mensagemTexto)) {
-        $mensagem = 'Por favor, preencha todos os campos obrigatórios.';
+    if (empty($nome) || empty($mensagemTexto)) {
+        $mensagem = 'Por favor, preencha nome e mensagem.';
+        $tipo = 'erro';
+    } elseif (empty($email) && empty($telefone)) {
+        $mensagem = 'Por favor, informe pelo menos um e-mail ou telefone para contato.';
         $tipo = 'erro';
     } else {
-        // Aqui você pode adicionar lógica para enviar email ou salvar no banco
-        // Por enquanto, apenas simulamos sucesso
-        $mensagem = 'Mensagem enviada com sucesso! Entraremos em contato em breve.';
-        $tipo = 'sucesso';
+        try {
+            $db = Database::getInstance()->getConnection();
+            
+            // Verificar se o cliente está logado
+            $cliente_id = $_SESSION['cliente_id'] ?? null;
+            
+            // Salvar mensagem no banco
+            $sql = "INSERT INTO contatos (cliente_id, nome, email, telefone, assunto, mensagem) 
+                    VALUES (?, ?, ?, ?, ?, ?)";
+            $stmt = $db->prepare($sql);
+            $stmt->execute([$cliente_id, $nome, $email, $telefone, $assunto, $mensagemTexto]);
+            
+            $mensagem = 'Mensagem enviada com sucesso! Entraremos em contato em breve.';
+            $tipo = 'sucesso';
+        } catch (Exception $e) {
+            $mensagem = 'Erro ao enviar mensagem. Tente novamente.';
+            $tipo = 'erro';
+        }
     }
 }
 ?>
@@ -285,13 +303,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     </div>
                     
                     <div class="form-group">
-                        <label for="email">E-mail *</label>
-                        <input type="email" id="email" name="email" required>
+                        <label for="email">E-mail</label>
+                        <input type="email" id="email" name="email">
+                        <small style="color: #666;">* Informe pelo menos e-mail ou telefone</small>
                     </div>
                     
                     <div class="form-group">
                         <label for="telefone">Telefone</label>
                         <input type="tel" id="telefone" name="telefone" placeholder="(44) 99999-9999">
+                        <small style="color: #666;">* Informe pelo menos e-mail ou telefone</small>
                     </div>
                     
                     <div class="form-group">
@@ -337,5 +357,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </main>
     
     <?php include __DIR__ . '/views/partials/footer.php'; ?>
+    
+    <script>
+        // Máscara para telefone (44) 99999-9999
+        document.getElementById('telefone').addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, ''); // Remove tudo que não é número
+            
+            if (value.length <= 11) {
+                if (value.length > 2) {
+                    value = value.replace(/(\d{2})(\d)/, '($1) $2');
+                }
+                if (value.length > 7) {
+                    value = value.replace(/(\d{2})\) (\d{5})(\d)/, '$1) $2-$3');
+                }
+            }
+            
+            e.target.value = value;
+        });
+    </script>
 </body>
 </html>

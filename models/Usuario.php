@@ -7,7 +7,7 @@
 require_once __DIR__ . '/Model.php';
 
 class Usuario extends Model {
-    protected $table = 'usuarios';
+    protected $table = 'usuarios_admin';
     
     /**
      * Buscar usuário por email

@@ -341,6 +341,7 @@ $categorias = $categoriaModel->findAll();
                 <a href="categorias.php" class="active">📁 Categorias</a>
                 <a href="pedidos.php">📦 Pedidos</a>
                 <a href="clientes.php">👥 Clientes</a>
+                <a href="mensagens.php">💬 Mensagens</a>
                 <a href="../logout.php">🚪 Sair</a>
             </nav>
         </aside>

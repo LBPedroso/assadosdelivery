@@ -88,15 +88,18 @@ class PedidoController {
         try {
             // Obter itens do carrinho (virá via JavaScript)
             if (!isset($_POST['carrinho_json'])) {
-                // Se não veio via POST, retornar false
-                return false;
+                error_log("Carrinho JSON não foi enviado");
+                throw new Exception("Carrinho vazio - dados não foram enviados.");
             }
             
             $carrinho = json_decode($_POST['carrinho_json'], true);
             
             if (empty($carrinho)) {
-                return false;
+                error_log("Carrinho vazio após decode");
+                throw new Exception("Carrinho está vazio.");
             }
+            
+            error_log("Carrinho recebido: " . print_r($carrinho, true));
             
             // Calcular valores
             $subtotal = 0;
@@ -106,6 +109,8 @@ class PedidoController {
             
             $taxa_entrega = $subtotal >= 50 ? 0 : 5.00;
             $total = $subtotal + $taxa_entrega;
+            
+            error_log("Total calculado: " . $total);
             
             // Criar pedido no banco
             $pedidoId = $this->pedidoModel->criarPedido(
@@ -120,11 +125,14 @@ class PedidoController {
                 ]
             );
             
+            error_log("Pedido criado com ID: " . $pedidoId);
+            
             return $pedidoId;
             
         } catch (Exception $e) {
             error_log("Erro ao criar pedido: " . $e->getMessage());
-            return false;
+            error_log("Stack trace: " . $e->getTraceAsString());
+            throw $e; // Re-lançar exceção para exibir mensagem
         }
     }
     

@@ -351,6 +351,7 @@ $statusCores = [
                 <a href="categorias.php">📁 Categorias</a>
                 <a href="pedidos.php" class="active">📦 Pedidos</a>
                 <a href="clientes.php">👥 Clientes</a>
+                <a href="mensagens.php">💬 Mensagens</a>
                 <a href="../logout.php">🚪 Sair</a>
             </nav>
         </aside>

@@ -17,27 +17,37 @@ if (!AuthController::isCliente()) {
 
 // Processar finalização do pedido
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $pedidoController = new PedidoController();
-    
-    // Dados do pedido
-    $dados = [
-        'cliente_id' => $_SESSION['cliente_id'],
-        'observacoes' => $_POST['observacoes'] ?? '',
-        'forma_pagamento' => $_POST['forma_pagamento'] ?? 'dinheiro',
-        'data_entrega' => $_POST['data_entrega'] ?? date('Y-m-d', strtotime('+1 day'))
-    ];
-    
-    // Criar pedido
-    $pedidoId = $pedidoController->criarPedido($dados);
-    
-    if ($pedidoId) {
-        // Limpar carrinho
-        echo "<script>localStorage.removeItem('carrinho');</script>";
-        $_SESSION['pedido_sucesso'] = $pedidoId;
-        header('Location: pedido-confirmado.php?id=' . $pedidoId);
-        exit;
-    } else {
-        $erro = "Erro ao processar pedido. Tente novamente.";
+    try {
+        $pedidoController = new PedidoController();
+        
+        // Verificar se o carrinho foi enviado
+        if (!isset($_POST['carrinho_json']) || empty($_POST['carrinho_json'])) {
+            throw new Exception("Carrinho vazio ou não foi enviado.");
+        }
+        
+        // Dados do pedido
+        $dados = [
+            'cliente_id' => $_SESSION['cliente_id'],
+            'observacoes' => $_POST['observacoes'] ?? '',
+            'forma_pagamento' => $_POST['forma_pagamento'] ?? 'dinheiro',
+            'data_entrega' => $_POST['data_entrega'] ?? date('Y-m-d', strtotime('+1 day'))
+        ];
+        
+        // Criar pedido
+        $pedidoId = $pedidoController->criarPedido($dados);
+        
+        if ($pedidoId) {
+            // Limpar carrinho
+            echo "<script>localStorage.removeItem('carrinho');</script>";
+            $_SESSION['pedido_sucesso'] = $pedidoId;
+            header('Location: pedido-confirmado.php?id=' . $pedidoId);
+            exit;
+        } else {
+            $erro = "Erro ao processar pedido. Tente novamente.";
+        }
+    } catch (Exception $e) {
+        $erro = "Erro: " . $e->getMessage();
+        error_log("Erro no checkout: " . $e->getMessage());
     }
 }
 

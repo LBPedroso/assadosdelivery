@@ -1,4 +1,7 @@
 <?php
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
 session_start();
 require_once __DIR__ . '/../config/config.php';
 require_once __DIR__ . '/../config/database.php';
@@ -414,6 +417,7 @@ $categorias = $categoriaModel->findAll();
                 <a href="categorias.php">📁 Categorias</a>
                 <a href="pedidos.php">📦 Pedidos</a>
                 <a href="clientes.php">👥 Clientes</a>
+                <a href="mensagens.php">💬 Mensagens</a>
                 <a href="../logout.php">🚪 Sair</a>
             </nav>
         </aside>
