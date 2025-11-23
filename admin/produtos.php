@@ -1,7 +1,4 @@
 <?php
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
-
 session_start();
 require_once __DIR__ . '/../config/config.php';
 require_once __DIR__ . '/../config/database.php';
@@ -119,8 +116,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-// Buscar todos os produtos e categorias
-$produtos = $produtoModel->findAll();
+// Buscar todos os produtos com categorias usando LEFT JOIN
+$db = Database::getInstance()->getConnection();
+$stmt = $db->query("
+    SELECT p.*, c.nome as categoria_nome 
+    FROM produtos p 
+    LEFT JOIN categorias c ON p.categoria_id = c.id 
+    ORDER BY p.id DESC
+");
+$produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
 $categorias = $categoriaModel->findAll();
 ?>
 <!DOCTYPE html>
@@ -417,7 +421,6 @@ $categorias = $categoriaModel->findAll();
                 <a href="categorias.php">📁 Categorias</a>
                 <a href="pedidos.php">📦 Pedidos</a>
                 <a href="clientes.php">👥 Clientes</a>
-                <a href="mensagens.php">💬 Mensagens</a>
                 <a href="../logout.php">🚪 Sair</a>
             </nav>
         </aside>

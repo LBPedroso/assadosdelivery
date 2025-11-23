@@ -1,7 +1,4 @@
 <?php
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
-
 session_start();
 require_once __DIR__ . '/../config/config.php';
 require_once __DIR__ . '/../config/database.php';
@@ -49,16 +46,13 @@ $sqlTotal = "SELECT COUNT(*) as total FROM clientes";
 $stmtTotal = $db->query($sqlTotal);
 $totalClientes = $stmtTotal->fetch(PDO::FETCH_ASSOC)['total'];
 
-// Buscar todos os clientes com estatísticas de pedidos e mensagens
+// Buscar todos os clientes com estatísticas de pedidos
 $sql = "SELECT c.*, 
         COUNT(DISTINCT p.id) as total_pedidos,
         COALESCE(SUM(p.total), 0) as total_gasto,
-        MAX(p.criado_em) as ultimo_pedido,
-        COUNT(DISTINCT ct.id) as total_mensagens,
-        SUM(CASE WHEN ct.lido = 0 THEN 1 ELSE 0 END) as mensagens_nao_lidas
+        MAX(p.criado_em) as ultimo_pedido
         FROM clientes c
         LEFT JOIN pedidos p ON c.id = p.cliente_id
-        LEFT JOIN contatos ct ON c.id = ct.cliente_id
         GROUP BY c.id
         ORDER BY total_pedidos DESC, c.nome ASC";
 $stmt = $db->query($sql);
@@ -322,7 +316,6 @@ $clientes = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 <a href="categorias.php">📁 Categorias</a>
                 <a href="pedidos.php">📦 Pedidos</a>
                 <a href="clientes.php" class="active">👥 Clientes</a>
-                <a href="mensagens.php">💬 Mensagens</a>
                 <a href="../logout.php">🚪 Sair</a>
             </nav>
         </aside>
@@ -361,10 +354,10 @@ $clientes = $stmt->fetchAll(PDO::FETCH_ASSOC);
             
             <div class="clientes-grid" id="clientesGrid">
                 <?php foreach ($clientes as $cliente): ?>
-                <div class="cliente-card" data-nome="<?php echo strtolower($cliente['nome']); ?>" data-email="<?php echo strtolower($cliente['email'] ?? ''); ?>" data-telefone="<?php echo $cliente['telefone'] ?? ''; ?>">
+                <div class="cliente-card" data-nome="<?php echo strtolower($cliente['nome']); ?>" data-email="<?php echo strtolower($cliente['email']); ?>" data-telefone="<?php echo $cliente['telefone']; ?>">
                     <div class="cliente-info">
                         <h3><?php echo htmlspecialchars($cliente['nome']); ?></h3>
-                        <p>📧 <?php echo !empty($cliente['email']) ? htmlspecialchars($cliente['email']) : 'Não informado'; ?></p>
+                        <p>📧 <?php echo htmlspecialchars($cliente['email']); ?></p>
                         <p>📱 <?php echo !empty($cliente['telefone']) ? formatarTelefone($cliente['telefone']) : 'Não informado'; ?></p>
                         <?php if (!empty($cliente['endereco_rua'])): ?>
                         <p>📍 <?php echo htmlspecialchars($cliente['endereco_rua']); ?>, <?php echo htmlspecialchars($cliente['endereco_numero'] ?? 's/n'); ?> - <?php echo htmlspecialchars($cliente['endereco_bairro'] ?? ''); ?></p>
@@ -397,30 +390,15 @@ $clientes = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                 <div class="label">Total Gasto</div>
                             </div>
                             <div class="stat-item">
-                                <div class="numero">
-                                    <?php echo $cliente['total_mensagens']; ?>
-                                    <?php if ($cliente['mensagens_nao_lidas'] > 0): ?>
-                                        <span style="color: #E63946; font-size: 12px;">●</span>
-                                    <?php endif; ?>
-                                </div>
-                                <div class="label">Mensagens</div>
+                                <div class="numero">R$ <?php echo $cliente['total_pedidos'] > 0 ? number_format($cliente['total_gasto'] / $cliente['total_pedidos'], 0) : 0; ?></div>
+                                <div class="label">Ticket Médio</div>
                             </div>
                         </div>
-                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px;">
-                            <?php if ($cliente['total_pedidos'] > 0): ?>
-                            <button class="btn btn-secondary" onclick="verPedidosCliente(<?php echo $cliente['id']; ?>, '<?php echo addslashes($cliente['nome']); ?>')">
-                                Ver Pedidos
-                            </button>
-                            <?php endif; ?>
-                            <?php if ($cliente['total_mensagens'] > 0): ?>
-                            <button class="btn btn-secondary" onclick="verMensagensCliente(<?php echo $cliente['id']; ?>, '<?php echo addslashes($cliente['nome']); ?>')">
-                                💬 Mensagens
-                                <?php if ($cliente['mensagens_nao_lidas'] > 0): ?>
-                                    <span style="background: #E63946; padding: 2px 6px; border-radius: 10px; font-size: 11px; margin-left: 5px;"><?php echo $cliente['mensagens_nao_lidas']; ?></span>
-                                <?php endif; ?>
-                            </button>
-                            <?php endif; ?>
-                        </div>
+                        <?php if ($cliente['total_pedidos'] > 0): ?>
+                        <button class="btn btn-secondary" style="width: 100%; margin-top: 10px;" onclick="verPedidosCliente(<?php echo $cliente['id']; ?>, '<?php echo addslashes($cliente['nome']); ?>')">
+                            Ver Pedidos
+                        </button>
+                        <?php endif; ?>
                     </div>
                 </div>
                 <?php endforeach; ?>
@@ -506,53 +484,6 @@ $clientes = $stmt->fetchAll(PDO::FETCH_ASSOC);
             } catch (error) {
                 console.error('Erro:', error);
                 alert('Erro ao carregar pedidos do cliente');
-            }
-        }
-        
-        async function verMensagensCliente(clienteId, clienteNome) {
-            try {
-                const response = await fetch(`../api/cliente_mensagens.php?id=${clienteId}`);
-                const data = await response.json();
-                
-                if (data.success) {
-                    const mensagens = data.mensagens;
-                    
-                    document.getElementById('modalTitulo').textContent = `💬 Mensagens de ${clienteNome}`;
-                    
-                    let html = '';
-                    if (mensagens.length === 0) {
-                        html = '<p style="text-align: center; padding: 20px; color: #666;">Nenhuma mensagem encontrada.</p>';
-                    } else {
-                        mensagens.forEach(msg => {
-                            html += `
-                                <div class="pedido-item" style="flex-direction: column; align-items: flex-start;">
-                                    <div style="width: 100%; display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-                                        <div>
-                                            <strong>${msg.assunto || 'Sem assunto'}</strong>
-                                            ${msg.lido == 0 ? '<span style="background: #E63946; color: white; padding: 2px 6px; border-radius: 10px; font-size: 11px; margin-left: 5px;">NOVA</span>' : ''}
-                                        </div>
-                                        <small style="color: #666;">📅 ${new Date(msg.data_envio).toLocaleDateString('pt-BR')} ${new Date(msg.data_envio).toLocaleTimeString('pt-BR')}</small>
-                                    </div>
-                                    <div style="width: 100%; padding: 10px; background: #f8f9fa; border-radius: 5px; margin-bottom: 8px;">
-                                        <p style="margin: 0; white-space: pre-wrap;">${msg.mensagem}</p>
-                                    </div>
-                                    <div style="width: 100%; display: flex; gap: 10px; font-size: 13px; color: #666;">
-                                        <span>📧 ${msg.email}</span>
-                                        ${msg.telefone ? `<span>📱 ${msg.telefone}</span>` : ''}
-                                    </div>
-                                </div>
-                            `;
-                        });
-                    }
-                    
-                    document.getElementById('pedidosConteudo').innerHTML = html;
-                    document.getElementById('modalPedidos').style.display = 'block';
-                } else {
-                    alert('Erro ao carregar mensagens do cliente');
-                }
-            } catch (error) {
-                console.error('Erro:', error);
-                alert('Erro ao carregar mensagens do cliente');
             }
         }
         

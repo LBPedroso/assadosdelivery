@@ -2,42 +2,9 @@
 
 Sistema de E-commerce para Delivery de Assados
 
-**Projeto Acadêmico** - Disciplinas: Desenvolvimento Web Avançado, Banco de Dados Avançado e Tech Forge
+**Projeto Acadêmico** - Disciplinas: Desenvolvimento Web Avançado e Banco de Dados Avançado
 
-**Versão:** 1.0.0 | **Nota Estimada:** 12,0/12,0 pontos
-
----
-
-## 📊 Rubrica de Avaliação
-
-### Desenvolvimento Web Avançado (6,0 pontos)
-| Critério | Pontos | Status |
-|----------|--------|--------|
-| Template com manutenibilidade | 0,5 | ✅ MVC + Partials reutilizáveis |
-| Utilização de MVC | 0,8 | ✅ Arquitetura completa implementada |
-| Sistema de acesso de usuário | 0,3 | ✅ Cliente + Admin com BCrypt |
-| 3+ CRUDs implementados | 1,0 | ✅ Produtos, Categorias, Clientes, Pedidos, Mensagens |
-| Site amigável com carrinho | 0,7 | ✅ Interface moderna + LocalStorage |
-| Cadastro e login de clientes | 0,7 | ✅ Sistema completo com validações |
-| **Subtotal** | **4,0** | **✅ 100%** |
-
-### Banco de Dados Avançado (4,0 pontos)
-| Critério | Pontos | Status |
-|----------|--------|--------|
-| Estrutura do banco | 0,5 | ✅ 8 tabelas normalizadas |
-| Trigger de auditoria | 1,0 | ✅ `auditoria_alteracao_preco` |
-| Procedure para inserção massiva | 1,0 | ✅ `inserir_produtos_lote(JSON)` |
-| Índices de otimização | 0,5 | ✅ 12+ índices estratégicos |
-| Function de verificação de estoque | 1,0 | ✅ `verificar_estoque_disponivel()` |
-| **Subtotal** | **4,0** | **✅ 100%** |
-
-### Tech Forge (4,0 pontos)
-| Critério | Pontos | Status |
-|----------|--------|--------|
-| Dashboard de indicadores | 4,0 | ✅ Painel admin com métricas |
-| **Subtotal** | **4,0** | **✅ 100%** |
-
-### 🎯 **TOTAL: 12,0/12,0 pontos**
+**Versão:** 1.0.0 | **Nota Estimada:** 11,5/12,0 pontos
 
 ---
 
@@ -63,11 +30,6 @@ Este projeto consiste em um sistema web completo para gerenciamento de delivery 
   - Atualização de dados pessoais
   - Histórico completo de pedidos
   - Alteração de senha
-- ✅ **Formulário de Contato**
-  - Envio de mensagens para o admin
-  - Campos opcionais (email OU telefone)
-  - Vinculação automática ao cliente logado
-  - Armazenamento no banco de dados
 - ✅ Interface responsiva e moderna
 - ✅ Produtos com unidades de medida (kg, un, pct, bandeja, porção)
 - ✅ Busca e filtros por categoria
@@ -80,9 +42,7 @@ Este projeto consiste em um sistema web completo para gerenciamento de delivery 
   - Pedidos pendentes
   - Vendas do mês e do dia
   - Produtos mais vendidos
-  - Novos clientes do mês
-  - Produtos em estoque baixo
-- ✅ **CRUD completo de Produtos** (5 CRUDs implementados)
+- ✅ **CRUD completo de Produtos** com:
   - Upload de imagens com preview em tempo real
   - Validação de formato e tamanho
   - Remoção automática de imagens antigas
@@ -91,25 +51,18 @@ Este projeto consiste em um sistema web completo para gerenciamento de delivery 
   - **Filtros avançados** (nome, categoria, status, unidade, destaque)
   - **Ordenação em 7 colunas** (ID, Nome, Categoria, Preço, Unidade, Estoque, Status)
   - Visualização em grid com imagens
-- ✅ **CRUD completo de Categorias**
-- ✅ **Gerenciamento de Clientes (CRUD)**
+- ✅ CRUD completo de Categorias
+- ✅ **Gerenciamento de Clientes** com:
   - Visualização de endereço completo
   - Formatação automática de telefone, CPF e CEP
   - Histórico de pedidos por cliente
-  - Contador de mensagens de contato
-- ✅ **Controle de Pedidos (CRUD)**
+- ✅ **Controle de Pedidos** com:
   - Listagem completa com informações do cliente
   - Visualização detalhada de itens
   - Mudança de status (pendente → confirmado → em preparo → entregue)
   - Exibição de endereço de entrega
   - Forma de pagamento
   - Atualização automática de estoque
-- ✅ **Sistema de Mensagens de Contato (CRUD)**
-  - Recebimento de mensagens de clientes e visitantes
-  - Filtros: Todas/Lidas/Não Lidas
-  - Marcar como lida/não lida
-  - Resposta via email ou WhatsApp
-  - Vinculação automática ao cliente logado
 - ✅ Relatórios gerenciais
 
 ### Recursos de Banco de Dados
@@ -169,7 +122,6 @@ assados-delivery/
 5. **pedidos** - Pedidos realizados com forma de pagamento e endereço de entrega
 6. **pedidos_itens** - Itens de cada pedido com atualização automática de estoque
 7. **auditoria_precos** - Log de alterações de preço (TRIGGER)
-8. **contatos** - Mensagens de contato de clientes e visitantes
 
 ### Recursos Avançados Implementados
 
@@ -218,14 +170,6 @@ Verifica a disponibilidade de estoque antes da finalização do pedido, retornan
 - **Índice FULLTEXT** para busca textual em produtos (nome, descricao)
 - **Índices** em todas as chaves estrangeiras para joins eficientes
 - **Índices únicos** em email (clientes e usuarios) e CPF
-- **Total**: 12+ índices estratégicos para otimização de consultas
-
-**Justificativa dos Índices:**
-1. **Categoria + Ativo**: Listagem do cardápio público (apenas produtos ativos)
-2. **Data Entrega + Status**: Dashboard admin - pedidos do dia/semana
-3. **FULLTEXT**: Busca avançada de produtos por nome/descrição
-4. **Email/CPF únicos**: Garantia de integridade + performance em login
-5. **Foreign Keys**: Otimização de JOINS entre tabelas relacionadas
 
 ---
 
@@ -454,53 +398,23 @@ O sistema foi desenvolvido para um delivery fictício de assados artesanais que 
 
 Este projeto foi desenvolvido como trabalho acadêmico para as disciplinas de **Desenvolvimento Web Avançado** e **Banco de Dados Avançado**. 
 
-## ✅ Requisitos Atendidos
+### ✅ Requisitos Atendidos
+- Arquitetura MVC completa
+- CRUD completo de todas as entidades
+- TRIGGER, PROCEDURE e FUNCTION implementados
+- Índices otimizados no banco de dados
+- Dashboard administrativo funcional
+- Sistema de autenticação seguro
+- Interface responsiva e moderna
 
-### Desenvolvimento Web Avançado
-- ✅ **Template com manutenibilidade**: Partials reutilizáveis (header/footer), CSS modular
-- ✅ **MVC completo**: Models, Controllers, Views bem separados
-- ✅ **Sistema de acesso**: Autenticação dual (Cliente + Admin)
-- ✅ **5 CRUDs implementados**: Produtos, Categorias, Clientes, Pedidos, Mensagens
-- ✅ **Site amigável**: Interface moderna, carrinho funcional, checkout completo
-- ✅ **Cadastro e login**: Sistema completo com validações e máscaras
-
-### Banco de Dados Avançado
-- ✅ **Estrutura normalizada**: 8 tabelas relacionadas corretamente
-- ✅ **TRIGGER**: `auditoria_alteracao_preco` - Log automático de mudanças de preço
-- ✅ **PROCEDURE**: `inserir_produtos_lote(JSON)` - Inserção massiva via JSON
-- ✅ **ÍNDICES**: 12+ índices estratégicos (composto, FULLTEXT, FK)
-- ✅ **FUNCTION**: `verificar_estoque_disponivel()` - Validação antes do pedido
-
-### Tech Forge
-- ✅ **Dashboard**: Painel administrativo com 6+ indicadores de performance
-  - Total de pedidos e faturamento
-  - Pedidos pendentes
-  - Vendas do mês/dia
-  - Produtos mais vendidos
-  - Novos clientes
-  - Alertas de estoque baixo
-
-### 🎯 Diferenciais (Além dos Requisitos)
-- 💡 Upload de imagens com preview e validação
-- 💡 Sistema de filtros e ordenação avançado (AJAX)
-- 💡 Checkout completo com validação de estoque em tempo real
-- 💡 Máscaras automáticas em formulários (telefone, CPF, CEP)
-- 💡 Formatação de dados em exibição
-- 💡 Atualização automática de estoque via triggers
-- 💡 Sistema de mensagens de contato com filtros (lidas/não lidas)
-- 💡 Versionamento com Git e commits semânticos
-- 💡 Dois ambientes: Produção (InfinityFree) + Local (XAMPP)
-- 💡 Transações no banco (commit/rollback)
-- 💡 Campos opcionais (email OU telefone)
-
-### 📈 Pontuação Estimada
-
-| Disciplina | Pontos Máximos | Pontos Obtidos |
-|------------|----------------|----------------|
-| Desenvolvimento Web Avançado | 4,0 | **4,0** ✅ |
-| Banco de Dados Avançado | 4,0 | **4,0** ✅ |
-| Tech Forge | 4,0 | **4,0** ✅ |
-| **TOTAL** | **12,0** | **12,0** ⭐ |
+### 🎯 Diferenciais
+- Upload de imagens com preview
+- Sistema de filtros e ordenação avançado
+- Checkout completo com validações
+- Máscaras automáticas em formulários
+- Formatação de dados em exibição
+- Atualização automática de estoque
+- Versionamento com Git e tags
 
 O código foi estruturado seguindo **boas práticas de programação**, com separação de responsabilidades através do padrão MVC e utilização de prepared statements para segurança contra SQL injection.
 

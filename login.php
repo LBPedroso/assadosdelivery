@@ -389,33 +389,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acao']) && $_POST['ac
         document.getElementById('login-email').addEventListener('input', function(e) {
             let value = e.target.value;
             
-            // Se começar com números ou parênteses, aplicar máscara de telefone
-            if (/^[\d(]/.test(value)) {
+            // Se começar com números, aplicar máscara de telefone
+            if (/^\d/.test(value)) {
                 value = value.replace(/\D/g, ''); // Remove tudo que não é número
                 
                 if (value.length <= 11) {
-                    if (value.length > 2) {
-                        value = value.replace(/(\d{2})(\d)/, '($1) $2');
-                    }
-                    if (value.length > 7) {
-                        value = value.replace(/(\d{2})\) (\d{5})(\d)/, '$1) $2-$3');
-                    }
+                    value = value.replace(/(\d{2})(\d)/, '($1) $2');
+                    value = value.replace(/(\d{5})(\d)/, '$1-$2');
                 }
                 
                 e.target.value = value;
             }
-        });
-
-        // Máscara para telefone no CADASTRO (44) 99999-9999
-        document.getElementById('cad-telefone').addEventListener('input', function(e) {
-            let value = e.target.value.replace(/\D/g, ''); // Remove tudo que não é número
-            
-            if (value.length <= 11) {
-                value = value.replace(/(\d{2})(\d)/, '($1) $2');
-                value = value.replace(/(\d{5})(\d)/, '$1-$2');
-            }
-            
-            e.target.value = value;
         });
 
         // Máscara para CEP 00000-000

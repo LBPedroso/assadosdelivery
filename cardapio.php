@@ -95,7 +95,7 @@ if ($categoria_id) {
                 <div class="produtos-grid">
                     <?php foreach ($produtos as $produto): ?>
                         <div class="produto-card">
-                            <img src="<?php echo SITE_URL; ?>/public/assets/img/produtos/<?php echo $produto['imagem'] ?? 'placeholder.jpg'; ?>" 
+                            <img src="public/assets/img/produtos/<?php echo $produto['imagem'] ?? 'default.jpg'; ?>" 
                                  alt="<?php echo htmlspecialchars($produto['nome']); ?>"
                                  class="produto-img">
                             

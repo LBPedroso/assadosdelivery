@@ -95,17 +95,6 @@ class AuthController {
             return ['success' => false, 'message' => 'Email inválido'];
         }
         
-        // Converter campos vazios para NULL (evitar erro de UNIQUE constraint)
-        if (empty($dados['email'])) {
-            $dados['email'] = null;
-        }
-        if (empty($dados['telefone'])) {
-            $dados['telefone'] = null;
-        }
-        if (empty($dados['cpf'])) {
-            $dados['cpf'] = null;
-        }
-        
         // Hash da senha
         $dados['senha'] = password_hash($dados['senha'], PASSWORD_DEFAULT);
         

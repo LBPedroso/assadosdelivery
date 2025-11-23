@@ -152,6 +152,33 @@ if (session_status() === PHP_SESSION_NONE) {
 
     <script src="public/assets/js/carrinho.js"></script>
     <script>
+        // Migração automática: corrigir caminhos de imagem antigos
+        function migrarCarrinho() {
+            let carrinho = obterCarrinho();
+            let modificado = false;
+            
+            carrinho = carrinho.map(item => {
+                // Se a imagem não tem o caminho completo, adicionar
+                if (item.imagem && !item.imagem.includes('public/assets/img/produtos/')) {
+                    item.imagem = 'public/assets/img/produtos/' + item.imagem;
+                    modificado = true;
+                }
+                // Se não tem imagem, usar default
+                if (!item.imagem || item.imagem === 'null' || item.imagem === 'NULL') {
+                    item.imagem = 'public/assets/img/produtos/default.jpg';
+                    modificado = true;
+                }
+                return item;
+            });
+            
+            if (modificado) {
+                salvarCarrinho(carrinho);
+            }
+        }
+        
+        // Executar migração ao carregar a página
+        migrarCarrinho();
+        
         // Renderizar carrinho
         function renderizarCarrinho() {
             const carrinho = obterCarrinho();
@@ -180,7 +207,7 @@ if (session_status() === PHP_SESSION_NONE) {
 
                 itensHTML += `
                     <div class="carrinho-item">
-                        <img src="${item.imagem || '<?php echo SITE_URL; ?>/public/assets/img/produtos/placeholder.jpg'}" 
+                        <img src="${item.imagem || 'public/assets/img/produtos/default.jpg'}" 
                              alt="${item.nome}" class="item-img">
                         
                         <div class="item-info">

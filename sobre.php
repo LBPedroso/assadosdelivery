@@ -8,7 +8,19 @@ require_once __DIR__ . '/config/config.php';
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sobre - Assados Delivery</title>
-    <link rel="stylesheet" href="<?php echo SITE_URL; ?>/public/assets/css/style.css">
+    <link rel="stylesheet" href="public/assets/css/style.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f5f5;
+        }
+    </style>
 </head>
 <body>
     <?php include __DIR__ . '/views/partials/header.php'; ?>

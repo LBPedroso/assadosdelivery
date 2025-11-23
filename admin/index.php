@@ -120,7 +120,6 @@ $totalCategorias = count($categoriaModel->findAtivas());
                 <a href="categorias.php">🏷️ Categorias</a>
                 <a href="pedidos.php">🛒 Pedidos</a>
                 <a href="clientes.php">👥 Clientes</a>
-                <a href="mensagens.php">💬 Mensagens</a>
                 <a href="../index.php" target="_blank">🌐 Ver Site</a>
                 <a href="../logout.php">🚪 Sair</a>
             </nav>

@@ -42,24 +42,9 @@ class Cliente extends Model {
         if (empty($emailOrTelefone)) {
             return null;
         }
-        
-        // Normalizar telefone: se não for email, formatar
-        $telefoneFormatado = $emailOrTelefone;
-        if (!filter_var($emailOrTelefone, FILTER_VALIDATE_EMAIL)) {
-            // Remove tudo que não é número
-            $numeros = preg_replace('/\D/', '', $emailOrTelefone);
-            
-            // Se tem 11 dígitos, formatar como (XX) XXXXX-XXXX
-            if (strlen($numeros) === 11) {
-                $telefoneFormatado = '(' . substr($numeros, 0, 2) . ') ' . 
-                                    substr($numeros, 2, 5) . '-' . 
-                                    substr($numeros, 7, 4);
-            }
-        }
-        
         $sql = "SELECT * FROM {$this->table} WHERE email = ? OR telefone = ?";
         $stmt = $this->db->prepare($sql);
-        $stmt->execute([$emailOrTelefone, $telefoneFormatado]);
+        $stmt->execute([$emailOrTelefone, $emailOrTelefone]);
         return $stmt->fetch();
     }
     
