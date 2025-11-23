@@ -15,6 +15,14 @@ $clienteModel = new Cliente();
 $pedidoModel = new Pedido();
 
 $cliente = $clienteModel->findById($_SESSION['cliente_id']);
+
+// Se cliente não encontrado, fazer logout
+if (!$cliente) {
+    session_destroy();
+    header('Location: login.php');
+    exit;
+}
+
 $pedidos = $pedidoModel->findByCliente($_SESSION['cliente_id']);
 
 // Processar atualização de dados
@@ -86,9 +94,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['atualizar'])) {
                     <div style="background: white; padding: 1.5rem; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
                         <h3 style="margin-bottom: 1rem; color: var(--cor-secundaria);">👤 Olá, <?php echo htmlspecialchars(explode(' ', $cliente['nome'])[0]); ?>!</h3>
                         <div style="padding: 1rem 0; border-top: 1px solid #eee;">
-                            <p><strong>Email:</strong> <?php echo htmlspecialchars($cliente['email']); ?></p>
-                            <p style="margin-top: 0.5rem;"><strong>Telefone:</strong> <?php echo htmlspecialchars($cliente['telefone'] ?? 'Não informado'); ?></p>
-                            <p style="margin-top: 0.5rem;"><strong>CPF:</strong> <?php echo htmlspecialchars($cliente['cpf'] ?? 'Não informado'); ?></p>
+                            <p><strong>Email:</strong> <?php echo !empty($cliente['email']) ? htmlspecialchars($cliente['email']) : 'Não informado'; ?></p>
+                            <p style="margin-top: 0.5rem;"><strong>Telefone:</strong> <?php echo !empty($cliente['telefone']) ? htmlspecialchars($cliente['telefone']) : 'Não informado'; ?></p>
+                            <p style="margin-top: 0.5rem;"><strong>CPF:</strong> <?php echo !empty($cliente['cpf']) ? htmlspecialchars($cliente['cpf']) : 'Não informado'; ?></p>
                         </div>
                     </div>
                 </div>

@@ -5,10 +5,10 @@
  */
 
 // Configurações do banco de dados
-define('DB_HOST', 'localhost');
-define('DB_NAME', 'assados_delivery');
-define('DB_USER', 'root');
-define('DB_PASS', '');
+define('DB_HOST', 'sql202.infinityfree.com');
+define('DB_NAME', 'if0_40443744_assados');
+define('DB_USER', 'if0_40443744');
+define('DB_PASS', 'assadados321');
 define('DB_CHARSET', 'utf8mb4');
 
 /**

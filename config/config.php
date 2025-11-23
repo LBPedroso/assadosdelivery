@@ -7,7 +7,7 @@
 // Configurações do Site
 define('SITE_NAME', 'Assados Delivery');
 define('SITE_SLOGAN', 'Seu almoço, sem esforço no final de semana');
-define('SITE_URL', 'http://localhost:8080/assados-delivery');
+define('SITE_URL', 'http://assados.wuaze.com');
 
 // Informações de Contato
 define('SITE_TELEFONE', '(44) 99968-0220');
